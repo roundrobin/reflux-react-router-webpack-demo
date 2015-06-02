@@ -1,0 +1,27 @@
+// ===========================================================================
+//
+// Base
+//      Default element overrides and various reusable classes
+//
+// ===========================================================================
+
+// NOTE: box-sizing
+//-------------------------------------
+// Each element on the page uses "box-sizing: border-box" because building layouts
+// is more obvious and how you would expect when applying width and padding on a 
+// container.
+*,
+*:after,
+*:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+
+body {
+    font-family: 'Source Sans Pro', Verdana, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+}
