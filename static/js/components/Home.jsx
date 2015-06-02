@@ -4,7 +4,6 @@
 import React from 'react';
 import { RouteHandler, Link } from 'react-router';
 import logger from 'bragi-browser';
-import FluxComponent from 'flummox/component'
 
 //==============================================================================
 // Module definition

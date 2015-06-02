@@ -3,7 +3,7 @@
 //==============================================================================
 import React from 'react';
 import { Route, DefaultRoute,  NotFoundRoute} from 'react-router';
-import FluxComponent from 'flummox/component'
+
 //==============================================================================
 // Internal dependencies
 //==============================================================================

@@ -2,18 +2,19 @@
 // External dependencies
 //==============================================================================
 import React from 'react/addons';
+import Reflux from 'reflux';
 import { RouteHandler, Link, Navigation } from 'react-router';
 import logger from 'bragi-browser';
-import {FluxComponent} from 'flummox/component'
-import FluxMixin from 'flummox/mixin';
-
 //==============================================================================
-// External dependencies
+// Internal dependencies
 //==============================================================================
+import RoomsStore from '../stores/RoomsStore.js';
+import ActiveRoomsStore from '../stores/ActiveRoomsStore.js';
+import ActionCreators from '../actions/ActionCreators.js';
 //==============================================================================
 // Configs
 //==============================================================================
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 //==============================================================================
 // Module definition
@@ -22,39 +23,43 @@ let RoomListMaster = React.createClass({
   contextTypes: {
     router: React.PropTypes.func
   },
-  mixins: [Navigation, FluxMixin({
-        rooms: store => ({
-            rooms: store.getRooms()
-        })
-  })],
+  mixins: [
+    Navigation,
+    Reflux.connect(RoomsStore, 'rooms')
+  ],
   componentDidMount(){
     logger.log("RoomListMaster:componentDidMount", "props", this.props);
 
   },
-  _clickButton: function(){
-    logger.log("RoomListMaster:_clickButton", "called");    
+  _clickAddRoomsBtn: function(){
+    logger.log("RoomListMaster:_clickAddRoomsBtn", "called");    
 
-    var id = Math.floor(Math.random()*1000);
-    this.props.flux.getActions('rooms').addRandomRoom({
+    let id = Math.floor(Math.random()*1000);
+    let newRoom = {
       title: "room-"+id,
       id: id
-    });  
+    };
+
+    ActionCreators.onAddRoom(newRoom);
+    
 
   },
   _openRoom: function(room){
     //Reponds to a click event on a room list item!
     logger.log("RoomListMasterTest:render", "called...", room); 
-    this.props.flux.getActions('rooms').openRoom(room);  
+    
+    ActionCreators.onOpenRoom(room);
+
     this.transitionTo('/room/'+room.id);
   },   
   render() {
-    var self = this;
+    let self = this;
     logger.log("RoomListMaster:render", "state", this.state);
 
     //Create list of rooms
-    var roomKeys = Object.keys(this.state.rooms);
-    var roomsList = roomKeys.map(function(roomId, i){
-      var room = self.state.rooms[roomId];
+    let roomKeys = Object.keys(this.state.rooms);
+    let roomsList = roomKeys.map(function(roomId, i){
+      let room = self.state.rooms[roomId];
       return (<div className={"room-list__item"} 
                   key={i} 
                   title="open chat room"
@@ -65,7 +70,7 @@ let RoomListMaster = React.createClass({
     //Render the Markup of this component
     return (<div className="list-view">
          <div className={"room-list"}>
-          <button className={"btn"} onClick={this._clickButton}>Add random chat room</button>
+          <button className={"btn"} onClick={this._clickAddRoomsBtn}>Add random chat room</button>
           <br/>
           <br/>
           <div className={"room-list-wrapper"}>          

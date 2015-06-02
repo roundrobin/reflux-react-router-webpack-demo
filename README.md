@@ -1,4 +1,4 @@
-# Reflux Demo App
+# Reflux demo app
 
 This demo app uses `Reflux` as a Flux implementation and `React` in conjunction with the `react-router` component. It's goal is to show how to use Flux in modern web apps.
 
@@ -41,6 +41,17 @@ This demo app shows how stores and actions in Flux work in conjunction with the 
 purpose of the demo, we implement a chat room store,  which holds the data of all rooms and a list of
 all active rooms. Based on that data we implement a couple of views visualizing lists and chat rooms.
 
+##Features of the demo
+* Flux implementation via Flux
+* Master/Detail view via React-Router
+* CSS animations via React's CSSTransitionGroup.
+* Canonical URLs via React-Router
+* Application logging via Bragi
+
+## Advantages Reflux
+* Small code base (~13kb)
+
+
 
 
 ## Not included
@@ -55,7 +66,7 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 ## Resources
 
 * [Reflux Documentation](https://github.com/spoike/refluxjs)
-
+* [Article: Reflux](http://henleyedition.com/building-an-app-using-react-and-refluxjs/)
 
 ## Feedback
 

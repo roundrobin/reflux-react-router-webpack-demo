@@ -4,7 +4,7 @@
 import React from 'react/addons';
 import logger from 'bragi-browser';
 import { RouteHandler, Link, Navigation } from 'react-router';
-import FluxMixin from 'flummox/mixin';
+
 //==============================================================================
 // Module definition
 //==============================================================================
@@ -12,11 +12,6 @@ let NoRoomSelectedDetail = React.createClass({
   contextTypes: {
     router: React.PropTypes.func
   },
-  mixins: [Navigation, FluxMixin({
-        rooms: store => ({
-            activeRooms: store.getActiveRooms()
-        })
-  })],  
 
   componentDidMount(){
     logger.log("NoRoomSelectedDetail:componentDidMount", "props", this.props);
