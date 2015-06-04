@@ -8,16 +8,12 @@ import {
 }
 from 'react-router';
 import logger from 'bragi-browser';
-import classNames from 'classnames';
 //==============================================================================
 // Internal dependencies
 //==============================================================================
+import RoomList from '../components/RoomList.jsx';
 import RoomsStore from '../stores/RoomsStore.js';
 import RoomActionCreators from '../actions/ActionCreator.js';
-//==============================================================================
-// Configs
-//==============================================================================
-let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 //==============================================================================
 // Module definition
 //==============================================================================
@@ -50,33 +46,13 @@ let RoomListMaster = React.createClass({
     render() {
         let self = this;
         logger.log("RoomListMaster:render", "state", this.state);
-        //Create list of rooms
-        let roomKeys = Object.keys(this.state.rooms);
-        logger.log("RoomListMaster:render", "roomKeys", roomKeys);
-        let roomsList = roomKeys.map(function(roomId, i) {
-            let room = self.state.rooms[roomId];
-            let classNameString = classNames("room-list__item", {
-                "room-list__item--is-member": room.isMember,
-                "room-list__item--active": room.isActive
-            });
-            return (<div className={classNameString} 
-                key={i} 
-                title="open chat room"
-                onClick={self._openRoom.bind(null, room)}>
-                {room.title}
-            </div>);
-        });
         //Render the Markup of this component
         return (<div className="list-view">
          <div className={"room-list"}>
           <button className={"btn"} onClick={this._clickAddRoomsBtn}>Add random chat room</button>
           <br/>
           <br/>
-          <div className={"room-list-wrapper"}>          
-            <ReactCSSTransitionGroup transitionName="room" className="animated-list">
-              {roomsList}
-            </ReactCSSTransitionGroup>
-          </div>
+          <RoomList rooms={this.state.rooms} onRoomCellClick={self._openRoom}/>
         </div>
 
         <RouteHandler/>

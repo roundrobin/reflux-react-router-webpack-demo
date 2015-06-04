@@ -27692,13 +27692,13 @@
 
 	var _bragiBrowser2 = _interopRequireDefault(_bragiBrowser);
 
-	var _classnames = __webpack_require__(253);
-
-	var _classnames2 = _interopRequireDefault(_classnames);
-
 	//==============================================================================
 	// Internal dependencies
 	//==============================================================================
+
+	var _componentsRoomListJsx = __webpack_require__(269);
+
+	var _componentsRoomListJsx2 = _interopRequireDefault(_componentsRoomListJsx);
 
 	var _storesRoomsStoreJs = __webpack_require__(254);
 
@@ -27708,10 +27708,6 @@
 
 	var _actionsActionCreatorJs2 = _interopRequireDefault(_actionsActionCreatorJs);
 
-	//==============================================================================
-	// Configs
-	//==============================================================================
-	var ReactCSSTransitionGroup = _reactAddons2['default'].addons.CSSTransitionGroup;
 	//==============================================================================
 	// Module definition
 	//==============================================================================
@@ -27743,24 +27739,6 @@
 	    render: function render() {
 	        var self = this;
 	        _bragiBrowser2['default'].log('RoomListMaster:render', 'state', this.state);
-	        //Create list of rooms
-	        var roomKeys = Object.keys(this.state.rooms);
-	        _bragiBrowser2['default'].log('RoomListMaster:render', 'roomKeys', roomKeys);
-	        var roomsList = roomKeys.map(function (roomId, i) {
-	            var room = self.state.rooms[roomId];
-	            var classNameString = (0, _classnames2['default'])('room-list__item', {
-	                'room-list__item--is-member': room.isMember,
-	                'room-list__item--active': room.isActive
-	            });
-	            return _reactAddons2['default'].createElement(
-	                'div',
-	                { className: classNameString,
-	                    key: i,
-	                    title: 'open chat room',
-	                    onClick: self._openRoom.bind(null, room) },
-	                room.title
-	            );
-	        });
 	        //Render the Markup of this component
 	        return _reactAddons2['default'].createElement(
 	            'div',
@@ -27775,15 +27753,7 @@
 	                ),
 	                _reactAddons2['default'].createElement('br', null),
 	                _reactAddons2['default'].createElement('br', null),
-	                _reactAddons2['default'].createElement(
-	                    'div',
-	                    { className: 'room-list-wrapper' },
-	                    _reactAddons2['default'].createElement(
-	                        ReactCSSTransitionGroup,
-	                        { transitionName: 'room', className: 'animated-list' },
-	                        roomsList
-	                    )
-	                )
+	                _reactAddons2['default'].createElement(_componentsRoomListJsx2['default'], { rooms: this.state.rooms, onRoomCellClick: self._openRoom })
 	            ),
 	            _reactAddons2['default'].createElement(_reactRouter.RouteHandler, null)
 	        );
@@ -51435,6 +51405,7 @@
 	        this.trigger(this.getAllMembers());
 	    },
 	    onAddUser: function onAddUser(roomId, user) {
+	        // Adds a new user in room `roomId` with the following data `user`
 	        user.id = _idIndex;
 	        var entry = _members[roomId];
 	        if (entry) {
@@ -51456,14 +51427,13 @@
 	        this.trigger(this.getAllMembers());
 	    },
 	    onRemoveUser: function onRemoveUser(roomId) {
-	        _bragiBrowser2['default'].log('MembersStore:onRemoveUser', 'user', roomId);
+	        _bragiBrowser2['default'].log('MembersStore:onRemoveUser', 'Remove a random user in room:', roomId);
 	        var keys = Object.keys(_members[roomId].members);
 	        var sample = _lodash2['default'].sample(keys);
 	        var membersOfRoom = _members[roomId];
 	        delete membersOfRoom.members[sample];
 	        _members = _members.set(roomId, membersOfRoom);
 	        this.trigger(this.getAllMembers());
-	        _bragiBrowser2['default'].log('MembersStore:onRemoveUser', 'sample', sample);
 	    }
 	});
 	module.exports = MembersStore;
@@ -56399,6 +56369,107 @@
 	  return Immutable;
 
 	}));
+
+/***/ },
+/* 269 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//==============================================================================
+	// External dependencies
+	//==============================================================================
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _reactAddons = __webpack_require__(212);
+
+	var _reactAddons2 = _interopRequireDefault(_reactAddons);
+
+	var _reflux = __webpack_require__(231);
+
+	var _reflux2 = _interopRequireDefault(_reflux);
+
+	var _bragiBrowser = __webpack_require__(200);
+
+	var _bragiBrowser2 = _interopRequireDefault(_bragiBrowser);
+
+	var _reactRouter = __webpack_require__(161);
+
+	var _classnames = __webpack_require__(253);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	//==============================================================================
+	// Internal dependencies
+	//==============================================================================
+
+	var _actionsActionCreatorJs = __webpack_require__(255);
+
+	var _actionsActionCreatorJs2 = _interopRequireDefault(_actionsActionCreatorJs);
+
+	var _storesRoomsStoreJs = __webpack_require__(254);
+
+	var _storesRoomsStoreJs2 = _interopRequireDefault(_storesRoomsStoreJs);
+
+	var _MembersListJsx = __webpack_require__(258);
+
+	var _MembersListJsx2 = _interopRequireDefault(_MembersListJsx);
+
+	var _ChatWindowJsx = __webpack_require__(261);
+
+	var _ChatWindowJsx2 = _interopRequireDefault(_ChatWindowJsx);
+
+	//==============================================================================
+	// Configs
+	//==============================================================================
+	var PureRenderMixin = _reactAddons2['default'].addons.PureRenderMixin;
+	var ReactCSSTransitionGroup = _reactAddons2['default'].addons.CSSTransitionGroup;
+	//==============================================================================
+	// Module definition
+	//==============================================================================
+	var RoomList = _reactAddons2['default'].createClass({
+	    displayName: 'RoomList',
+
+	    mixins: [PureRenderMixin],
+	    render: function render() {
+	        _bragiBrowser2['default'].log('RoomList:render', 'called...');
+	        var self = this;
+	        var roomKeys = Object.keys(this.props.rooms);
+
+	        var roomsList = roomKeys.map(function (roomId, i) {
+	            var room = self.props.rooms[roomId];
+	            var classNameString = (0, _classnames2['default'])('room-list__item', {
+	                'room-list__item--is-member': room.isMember,
+	                'room-list__item--active': room.isActive
+	            });
+	            return _reactAddons2['default'].createElement(
+	                'div',
+	                { className: classNameString,
+	                    key: i,
+	                    title: 'open chat room',
+	                    onClick: self.props.onRoomCellClick.bind(null, room) },
+	                room.title
+	            );
+	        });
+
+	        return _reactAddons2['default'].createElement(
+	            'div',
+	            { className: 'room-list-wrapper' },
+	            _reactAddons2['default'].createElement(
+	                ReactCSSTransitionGroup,
+	                { transitionName: 'room', className: 'animated-list' },
+	                roomsList
+	            )
+	        );
+	    }
+	});
+
+	exports['default'] = RoomList;
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);

@@ -54,6 +54,7 @@ let MembersStore = Reflux.createStore({
         this.trigger(this.getAllMembers());
     },
     onAddUser: function(roomId, user) {
+        // Adds a new user in room `roomId` with the following data `user`
         user.id = _idIndex;
         var entry = _members[roomId];
         if (entry) {
@@ -76,14 +77,13 @@ let MembersStore = Reflux.createStore({
         this.trigger(this.getAllMembers());
     },
     onRemoveUser: function(roomId) {
-        logger.log("MembersStore:onRemoveUser", "user", roomId);
+        logger.log("MembersStore:onRemoveUser", "Remove a random user in room:", roomId);
         var keys = Object.keys(_members[roomId].members);
         var sample = _.sample(keys);
         var membersOfRoom = _members[roomId];
         delete membersOfRoom.members[sample];
         _members = _members.set(roomId, membersOfRoom);
         this.trigger(this.getAllMembers());
-        logger.log("MembersStore:onRemoveUser", "sample", sample);
     }
 });
 module.exports = MembersStore;
