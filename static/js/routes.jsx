@@ -19,10 +19,12 @@ import NoRoomSelectedDetail from './components/NoRoomSelectedDetail.jsx';
 let Routes = (
     <Route name="app" path="/" handler={AppHandler}>
   	<Route name="home" path="/" handler={HomeView} />
+
   	<Route handler={RoomListMaster}>
 	    <Route name="listViewRooms" path="/list/popular" handler={NoRoomSelectedDetail} />
     	<Route name="roomsDetail" path="/room/:roomSlug" handler={RoomsDetailView} />
   	</Route>    
+  	
     <NotFoundRoute handler={NotFoundView}/>
   </Route>
 );

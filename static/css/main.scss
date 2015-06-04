@@ -10,6 +10,7 @@
 // ======================================
 @import "vendors/bourbon/bourbon";
 @import "vendors/normalize";
+
 // ======================================
 //
 // Base Styles
@@ -19,6 +20,7 @@
 // Makes sure all the CSS divs work with box-sizing "border-box"
 //
 @import "base/base";
+
 //
 // Defines how the list view and conversation are positioned on the site
 //
@@ -27,109 +29,158 @@
 $header-height: 65px;
 $room-list-width: 300px;
 
-
-body{
-	background: white;
-	width: 100vw;
-	height: 100vh;
-	overflow: hidden;
+body {
+    background: white;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
-.btn{
-	padding: 10px;
+.btn {
+    padding: 10px;
+    @include user-select(none);
 }
 
-
-header{
-	background: rgba(black, 0.5);
-	height: $header-height;
-	line-height: $header-height;
-	padding: 0px 10px;
+.top-header {
+    background: rgba(black, 0.5);
+    height: $header-height;
+    line-height: $header-height;
+    padding: 0px 10px;
 }
 
-.page{
-	@include position(absolute, auto auto auto 0);
-	width: 100%;
-	height: calc(100vh - #{$header-height});
+.page {
+    @include position(absolute, auto auto auto 0);
+    width: 100%;
+    height: calc(100vh - #{$header-height});
 }
 
-.home-view{
-	padding: 10px;
+.home-view {
+    padding: 10px;
 }
 
-.room-list{
-	@include position(absolute, 0 auto auto 0);
-	width: $room-list-width;
-	height: calc(100vh - #{$header-height});
-	background: rgba(gray, 0.3);
-	padding: 10px;
-	overflow-y: scroll;
-	
+.room-list {
+    @include position(absolute, 0 auto auto 0);
+    width: $room-list-width;
+    height: calc(100vh - #{$header-height});
+    background: rgba(gray, 0.3);
+    padding: 10px;
+    overflow-y: scroll;
 }
 
-.animated-list{
-	&:empty{
-
-		&:after{
-			content: "No chat rooms created. Click button above";
-			color: rgba(black, 0.3);
-		}
-		
-	}
+.animated-list {
+    &:empty {
+        &:after {
+            content: "No chat rooms created. Click button above";
+            color: rgba(black, 0.3);
+        }
+    }
 }
 
-.active-rooms{
-	@include position(absolute, 0 auto auto $room-list-width);
-	width: calc(100% - #{$room-list-width});
-	height: calc(100vh - #{$header-height});
-	background: rgba(gray, 0.1);
-	padding: 10px;
+.active-rooms {
+    @include position(absolute, 0 auto auto $room-list-width);
+    width: calc(100% - #{$room-list-width});
+    height: calc(100vh - #{$header-height});
+    background: rgba(gray, 0.1);
+    padding: 10px;
 }
 
-
-.room-list__item{
-	background: rgba(gray, 0.5);
-	padding: 10px;
-	border-radius: 3px;
-	margin: 10px 0px;
-	cursor: pointer;
-	&:hover{
-		background: rgba(gray, 0.9);
-	}
+.members-list {
+    @include position(absolute, 0 0 auto auto);
+    width: $room-list-width;
+    height: calc(100vh - #{$header-height});
+    background: rgba(coral, 0.1);
+    padding: 10px;
 }
 
-.link{
-	margin-right: 20px;
-	&:hover{
-		color: yellow;
-	}
+.chat-window {
+    @include position(absolute, 0 auto auto 0);
+    width: calc(100% - #{$room-list-width});
+    height: calc(100vh - #{$header-height});
+    background: rgba(green, 0.1);
+    padding: 10px;
 }
 
-.room-enter{
-	@include transition(opacity 0.3s);
-	opacity: 0;	
-} 
-
-.room-enter-active{
-	opacity: 1;
+.chat-window__reply-box {
+    @include position(absolute, auto auto 0 0);
+    width: 100%;
 }
 
-.room-enter-leave{
-	opacity: 1;
+.members-area {
+    &:empty {
+        &:after {
+            content: "No members in this room";
+            color: rgba(black, 0.3);
+        }
+    }
 }
 
-
-h1.u-inline{
-	margin: 0px;
-	margin-right: 20px;
+.chat-window__input {
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    outline: 0;
 }
 
-
-.u-inline{
-	display: inline-block;
+.chat-window__send {
+    $btn-height: 30px;
+    background: #2ecc71;
+    @include position(absolute, 50% 10px auto auto);
+    @include transform(translateY(-50%));
+    @include transition(background 0.3s);
+    width: 80px;
+    height: $btn-height;
+    line-height: $btn-height;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 3px;
+    color: rgba(black, 0.8);
+    &:hover {
+        background: darken(#2ecc71, 10);
+    }
 }
 
+.room-list__item {
+    background: rgba(gray, 0.5);
+    padding: 10px;
+    border-radius: 3px;
+    margin: 10px 0px;
+    cursor: pointer;
+    &:hover {
+        background: rgba(gray, 0.9);
+    }
+    &.room-list__item--is-member {
+        border-left: 5px solid rgba(red, 0.5);
+    }
+    &.room-list__item--active {
+        background: rgba(blue, 0.2);
+    }
+}
 
+.link {
+    margin-right: 20px;
+    &:hover {
+        color: yellow;
+    }
+}
 
+.room-enter {
+    @include transition(opacity 0.3s);
+    opacity: 0;
+}
 
+.room-enter-active {
+    opacity: 1;
+}
 
+.room-enter-leave {
+    opacity: 1;
+}
+
+h1.u-inline {
+    margin: 0px;
+    margin-right: 20px;
+}
+
+.u-inline {
+    display: inline-block;
+}

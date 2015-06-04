@@ -9,9 +9,10 @@ import { RouteHandler, Link, Navigation } from 'react-router';
 //==============================================================================
 // Internal dependencies
 //==============================================================================
-import ActiveRoomsStore from '../stores/ActiveRoomsStore.js';
-import ActionCreators from '../actions/ActionCreators.js';
-
+import ActionCreators from '../actions/ActionCreator.js';
+import RoomsStore from '../stores/RoomsStore.js';
+import MembersList from './MembersList.jsx';
+import ChatWindow from './ChatWindow.jsx';
 //==============================================================================
 // Module definition
 //==============================================================================
@@ -19,36 +20,32 @@ let RoomDetail = React.createClass({
   contextTypes: {
     router: React.PropTypes.func
   },
-  mixins: [Navigation, Reflux.connectFilter(ActiveRoomsStore, "room", function(rooms) {
-    logger.log("RoomDetail:connectFilter", "props", this.props, rooms);
+  mixins: [Navigation, Reflux.connectFilter(RoomsStore, "room", function(rooms) {
+    logger.log("RoomDetail:connectFilter", "callled...props", this.props.params.roomSlug);
     var roomId = Object.keys(rooms).filter(function(roomId) {
       return String(rooms[roomId].id) === String(this.props.params.roomSlug);
     }.bind(this))[0];
-
-
-    logger.log("RoomDetail:connectFilter", "Found a rooms for this URL param:", rooms[roomId]);
-
     return rooms[roomId];
   })],
-  componentDidMount(){
-    logger.log("RoomDetail:componentDidMount", "props", this.props);
-
-  },
   render() {
+    logger.log("RoomDetail:render", "state. roomId:", this.state);
     var self = this;
-    logger.log("RoomDetail:render", "state", this.state);
     var view;
       if(this.state.room){
           logger.log("RoomDetail:render", "Found a room");
-          view =<div>Openend room: {this.state.room.id}</div>
+          view = <div>
+                <ChatWindow><div>Openend room: {this.state.room.id}</div></ChatWindow>         
+                <MembersList roomId={this.state.room.id}/>
+          </div>;
+            
       }else{
         logger.log("RoomDetail:render", "Not found the room");
         view="room not found"
         this.transitionTo('/list/popular');
 
       }
-    return (<div className="active-rooms">
-          {view}
+    return  (<div className="active-rooms">      
+        {view}      
       </div>);
     }
 });

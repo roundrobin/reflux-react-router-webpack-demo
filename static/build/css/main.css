@@ -379,9 +379,13 @@ body {
   overflow: hidden; }
 
 .btn {
-  padding: 10px; }
+  padding: 10px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
 
-header {
+.top-header {
   background: rgba(0, 0, 0, 0.5);
   height: 65px;
   line-height: 65px;
@@ -426,6 +430,71 @@ header {
   background: rgba(128, 128, 128, 0.1);
   padding: 10px; }
 
+.members-list {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: auto;
+  width: 300px;
+  height: calc(100vh - 65px);
+  background: rgba(255, 127, 80, 0.1);
+  padding: 10px; }
+
+.chat-window {
+  position: absolute;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  width: calc(100% - 300px);
+  height: calc(100vh - 65px);
+  background: rgba(0, 128, 0, 0.1);
+  padding: 10px; }
+
+.chat-window__reply-box {
+  position: absolute;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  width: 100%; }
+
+.members-area:empty:after {
+  content: "No members in this room";
+  color: rgba(0, 0, 0, 0.3); }
+
+.chat-window__input {
+  width: 100%;
+  height: 50px;
+  padding: 10px;
+  outline: 0; }
+
+.chat-window__send {
+  background: #2ecc71;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  bottom: auto;
+  left: auto;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%);
+  -webkit-transition: background 0.3s;
+  -moz-transition: background 0.3s;
+  transition: background 0.3s;
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 3px;
+  color: rgba(0, 0, 0, 0.8); }
+  .chat-window__send:hover {
+    background: #25a25a; }
+
 .room-list__item {
   background: rgba(128, 128, 128, 0.5);
   padding: 10px;
@@ -434,6 +503,10 @@ header {
   cursor: pointer; }
   .room-list__item:hover {
     background: rgba(128, 128, 128, 0.9); }
+  .room-list__item.room-list__item--is-member {
+    border-left: 5px solid rgba(255, 0, 0, 0.5); }
+  .room-list__item.room-list__item--active {
+    background: rgba(0, 0, 255, 0.2); }
 
 .link {
   margin-right: 20px; }

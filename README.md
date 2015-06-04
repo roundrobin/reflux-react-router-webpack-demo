@@ -25,14 +25,14 @@ $ npm run dev
 
 ## Run demo server
 
-To run a simple http server (runs on port `8123` and be configured in webpack.config.js) 
+To run a simple http server (runs on port `8124` and be configured in webpack.config.js) 
 run: 
 
 ```bash
 $ npm run dev
 ```
 
-Then go to `http://localhost:8123` in your browser
+Then go to `http://localhost:8124` in your browser
 
 
 ## App
@@ -70,5 +70,5 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 
 ## Feedback
 
-If you have any questions or there is something you would like to see in the demo 
-app, just open an issue and I will try add it.
+If you have any questions or if there is something you would like to see in the demo 
+app, just open an issue and I will try to get to it asap.
