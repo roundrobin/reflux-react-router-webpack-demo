@@ -6,6 +6,7 @@ import Reflux from 'reflux';
 import logger from 'bragi-browser';
 import _ from 'lodash';
 import { RouteHandler, Link, Navigation } from 'react-router';
+import Immutable from 'immutable';
 //==============================================================================
 // Internal dependencies
 //==============================================================================
@@ -18,13 +19,13 @@ let MembersList = React.createClass({
     router: React.PropTypes.func
   },
   mixins: [Navigation, Reflux.connectFilter(MembersStore, "members", function(state) {
-        var membersObj = state[this.props.roomId+""];
-        var returnObj = {};
-        if(membersObj && membersObj.members){
-          returnObj = membersObj.members;
+        var membersObj = state.get(this.props.roomId+"");
+        var returnObj = Immutable.Map();
+        if(membersObj && membersObj.get("members")){
+          returnObj = membersObj.get("members");
         }
 
-        logger.log("MembersList:connectFilter", "props: ", this.props.roomId);
+        logger.log("MembersList:connectFilter", "props: %o members: %o ", this.props.roomId, returnObj);
         return returnObj;
     })],
   componentDidMount(){
@@ -34,11 +35,15 @@ let MembersList = React.createClass({
   render() {
     var self = this;
     logger.log("MembersList:render", "state",self.state);
+    var members;
 
-    var members = Object.keys(self.state.members).map(function(memberId, index){
-      var member = self.state.members[memberId];
-      return <div key={index} className="members-area__item">{member.name}-{member.id}</div>;
-    });
+    if(self.state.members){
+      var members = Object.keys(self.state.members.toObject()).map(function(memberId, index){
+        var member = self.state.members.get(memberId);
+        return <div key={index} className="members-area__item">{member.get("name")}-{member.get("id")}</div>;
+      });
+    }
+    
  
     return (<div className="members-list">
           <h2>Friendlist for room: {this.props.roomId}</h2>

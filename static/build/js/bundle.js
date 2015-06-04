@@ -29590,6 +29590,10 @@
 
 	var _reactRouter = __webpack_require__(161);
 
+	var _immutable = __webpack_require__(268);
+
+	var _immutable2 = _interopRequireDefault(_immutable);
+
 	//==============================================================================
 	// Internal dependencies
 	//==============================================================================
@@ -29608,13 +29612,13 @@
 	    router: _reactAddons2['default'].PropTypes.func
 	  },
 	  mixins: [_reactRouter.Navigation, _reflux2['default'].connectFilter(_storesMembersStore2['default'], 'members', function (state) {
-	    var membersObj = state[this.props.roomId + ''];
-	    var returnObj = {};
-	    if (membersObj && membersObj.members) {
-	      returnObj = membersObj.members;
+	    var membersObj = state.get(this.props.roomId + '');
+	    var returnObj = _immutable2['default'].Map();
+	    if (membersObj && membersObj.get('members')) {
+	      returnObj = membersObj.get('members');
 	    }
 
-	    _bragiBrowser2['default'].log('MembersList:connectFilter', 'props: ', this.props.roomId);
+	    _bragiBrowser2['default'].log('MembersList:connectFilter', 'props: %o members: %o ', this.props.roomId, returnObj);
 	    return returnObj;
 	  })],
 	  componentDidMount: function componentDidMount() {
@@ -29624,17 +29628,20 @@
 	  render: function render() {
 	    var self = this;
 	    _bragiBrowser2['default'].log('MembersList:render', 'state', self.state);
+	    var members;
 
-	    var members = Object.keys(self.state.members).map(function (memberId, index) {
-	      var member = self.state.members[memberId];
-	      return _reactAddons2['default'].createElement(
-	        'div',
-	        { key: index, className: 'members-area__item' },
-	        member.name,
-	        '-',
-	        member.id
-	      );
-	    });
+	    if (self.state.members) {
+	      var members = Object.keys(self.state.members.toObject()).map(function (memberId, index) {
+	        var member = self.state.members.get(memberId);
+	        return _reactAddons2['default'].createElement(
+	          'div',
+	          { key: index, className: 'members-area__item' },
+	          member.get('name'),
+	          '-',
+	          member.get('id')
+	        );
+	      });
+	    }
 
 	    return _reactAddons2['default'].createElement(
 	      'div',
@@ -51388,47 +51395,46 @@
 	        _bragiBrowser2['default'].log('MembersStore:init', 'Called');
 	    },
 	    getInitialState: function getInitialState() {
-	        return _members.toObject();
+	        return _members;
 	    },
 	    getAllMembers: function getAllMembers() {
-	        return _members.toObject();
+	        return _members;
 	    },
 	    onLoadRoomsCompleted: function onLoadRoomsCompleted(data) {
 	        _bragiBrowser2['default'].log('MembersStore:onLoadRoomsCompleted', 'called...', data);
 	        this.trigger(_members);
 	    },
-	    onOpenRoom: function onOpenRoom(data) {
-	        _bragiBrowser2['default'].log('MembersStore:onOpenRoom', 'called...', data);
-	        if (!_members[data.id]) {
+	    onOpenRoom: function onOpenRoom(room) {
+	        _bragiBrowser2['default'].log('MembersStore:onOpenRoom', 'called...', room);
+	        if (!_members[room.get('id')]) {
 	            _bragiBrowser2['default'].log('MembersStore:onOpenRoom', 'Add new room to the object');
 
 	            var randId = Math.floor(Math.random() * 1000);
-	            _members = _members.set(data.id, {
-	                members: {
-	                    1: {
+	            _members = _members.set(room.get('id'), _immutable2['default'].Map({ members: _immutable2['default'].Map({
+	                    '1': _immutable2['default'].Map({
 	                        name: 'Mr. Radish ' + randId,
-	                        id: 1
-	                    }
-	                }
-	            });
+	                        id: '1'
+	                    })
+	                }) }));
 	        }
 	        this.trigger(this.getAllMembers());
 	    },
 	    onAddUser: function onAddUser(roomId, user) {
-	        // Adds a new user in room `roomId` with the following data `user`
-	        user.id = _idIndex;
-	        var entry = _members[roomId];
+	        //Adds a new user in room `roomId` with the following data `user`
+	        var entry = _members.get(roomId);
 	        if (entry) {
-	            _members = _members.set(_idIndex, user);
+	            _members = _members.set(user.get('id'), user);
 	            _idIndex++;
 	        } else {
 	            _bragiBrowser2['default'].log('error:MembersStore:onAddUser', 'Didnt find room', roomId, user);
 	            //Initialize a new object for the room!
-	            _members = _members.set(roomId, { members: {} });
+	            _members = _members.set(roomId, _immutable2['default'].Map({ members: _immutable2['default'].Map() }));
 	            // Get the object to mutate the data
 	            var membersOfRoom = _members.get(roomId);
+
+	            _bragiBrowser2['default'].log('error:MembersStore:onAddUser', 'membersOfRoom', membersOfRoom);
 	            //Add a new user to the members object!
-	            membersOfRoom.members[_idIndex] = user;
+	            membersOfRoom = membersOfRoom.get('members').set(_idIndex, userMap);
 	            //Create a new instance of the members data structure
 	            _members = _members.set(roomId, membersOfRoom);
 	            //Increase the user id
@@ -56452,19 +56458,13 @@
 	var RoomList = _reactAddons2['default'].createClass({
 	    displayName: 'RoomList',
 
-	    //mixins: [PureRenderMixin],
-	    // shouldComponentUpdate: function(nextProps, nextState){
-	    //   logger.log("RoomList:shouldComponentUpdate", 'isEqual',
-	    //     nextProps.rooms,
-	    //     this.props.rooms,
-	    //     _.isEqual(nextProps.rooms, this.props.rooms));
-	    //   return !_.isEqual(nextProps.rooms, this.props.rooms);
-	    // },
+	    shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	        return !_immutable2['default'].is(nextProps.rooms, this.props.rooms);
+	    },
 	    render: function render() {
-	        _bragiBrowser2['default'].log('RoomList:render', 'called...', this.props.rooms);
+	        _bragiBrowser2['default'].log('RoomList:render', 'called...', this.props);
 	        var self = this;
 	        var roomKeys = Object.keys(this.props.rooms.toObject());
-	        _bragiBrowser2['default'].log('RoomList:render', 'roomKeys...', roomKeys);
 
 	        var roomsList = roomKeys.map(function (roomId, i) {
 	            var room = self.props.rooms.get(roomId);

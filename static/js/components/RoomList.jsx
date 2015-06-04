@@ -24,19 +24,13 @@ let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 // Module definition
 //==============================================================================
 let RoomList = React.createClass({
-  //mixins: [PureRenderMixin],
-  // shouldComponentUpdate: function(nextProps, nextState){
-  //   logger.log("RoomList:shouldComponentUpdate", 'isEqual', 
-  //     nextProps.rooms,
-  //     this.props.rooms,
-  //     _.isEqual(nextProps.rooms, this.props.rooms));
-  //   return !_.isEqual(nextProps.rooms, this.props.rooms);
-  // },
+  shouldComponentUpdate: function(nextProps, nextState){
+    return !Immutable.is(nextProps.rooms, this.props.rooms);
+  },
   render() {
-    logger.log("RoomList:render", "called...", this.props.rooms);
+    logger.log("RoomList:render", "called...", this.props);
     let self = this;
     let roomKeys = Object.keys(this.props.rooms.toObject());
-    logger.log("RoomList:render", "roomKeys...", roomKeys);
 
     let roomsList = roomKeys.map(function(roomId, i) {
             let room = self.props.rooms.get(roomId);

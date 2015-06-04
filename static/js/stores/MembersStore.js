@@ -26,48 +26,49 @@ let MembersStore = Reflux.createStore({
         logger.log("MembersStore:init", "Called");
     },
     getInitialState: function() {
-        return _members.toObject();
+        return _members;
     },
     getAllMembers: function(){
-        return _members.toObject();      
+        return _members;
     },
     onLoadRoomsCompleted: function(data) {
         logger.log("MembersStore:onLoadRoomsCompleted", "called...", data);
         this.trigger(_members);
     },
-    onOpenRoom: function(data) {
-        logger.log("MembersStore:onOpenRoom", "called...", data);
-        if (!_members[data.id]) {
+    onOpenRoom: function(room) {
+        logger.log("MembersStore:onOpenRoom", "called...", room);
+        if (!_members[room.get("id")]) {
             logger.log("MembersStore:onOpenRoom", "Add new room to the object");
 
 
             var randId = Math.floor(Math.random()*1000);
-            _members = _members.set(data.id, {
-                members: {
-                    1: { 
+            _members = _members.set(room.get("id"), Immutable.Map({ members: Immutable.Map({
+                    "1": Immutable.Map({ 
                         name: `Mr. Radish ${randId}`,
-                        id: 1
-                    }
-                }
-            });
+                        id: "1"
+                    })
+                })})
+            );
+
         }
         this.trigger(this.getAllMembers());
     },
     onAddUser: function(roomId, user) {
-        // Adds a new user in room `roomId` with the following data `user`
-        user.id = _idIndex;
-        var entry = _members[roomId];
+        //Adds a new user in room `roomId` with the following data `user`
+        var entry = _members.get(roomId);
         if (entry) {
-            _members = _members.set(_idIndex, user);
+            _members = _members.set(user.get("id"), user);
             _idIndex++;
         } else {
             logger.log("error:MembersStore:onAddUser", "Didnt find room", roomId, user);
             //Initialize a new object for the room!
-            _members = _members.set(roomId, { members: {} });
+            _members = _members.set(roomId, Immutable.Map({members:Immutable.Map()}));
             // Get the object to mutate the data
             var membersOfRoom = _members.get(roomId);
+
+            logger.log("error:MembersStore:onAddUser", "membersOfRoom", membersOfRoom);
             //Add a new user to the members object!
-            membersOfRoom.members[_idIndex] = user;
+            membersOfRoom = membersOfRoom.get("members").set(_idIndex, userMap);
             //Create a new instance of the members data structure
             _members = _members.set(roomId, membersOfRoom);
             //Increase the user id
