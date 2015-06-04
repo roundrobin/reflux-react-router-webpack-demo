@@ -27692,6 +27692,10 @@
 
 	var _bragiBrowser2 = _interopRequireDefault(_bragiBrowser);
 
+	var _immutable = __webpack_require__(268);
+
+	var _immutable2 = _interopRequireDefault(_immutable);
+
 	//==============================================================================
 	// Internal dependencies
 	//==============================================================================
@@ -27723,18 +27727,18 @@
 	    },
 	    _clickAddRoomsBtn: function _clickAddRoomsBtn() {
 	        _bragiBrowser2['default'].log('RoomListMaster:_clickAddRoomsBtn', 'called');
-	        var id = Math.floor(Math.random() * 1000);
-	        var newRoom = {
-	            title: 'room-' + id,
-	            id: id
-	        };
+	        var id = Math.floor(Math.random() * 10000);
+	        var newRoom = _immutable2['default'].Map({
+	            'title': 'room-' + id,
+	            'id': id + ''
+	        });
 	        _actionsActionCreatorJs2['default'].addRoom(newRoom);
 	    },
 	    _openRoom: function _openRoom(room) {
 	        //Reponds to a click event on a room list item!
 	        _bragiBrowser2['default'].log('RoomListMaster:_openRoom', 'called...', room);
 	        _actionsActionCreatorJs2['default'].openRoom(room);
-	        this.transitionTo('/room/' + room.id);
+	        this.transitionTo('/room/' + room.get('id'));
 	    },
 	    render: function render() {
 	        var self = this;
@@ -29373,33 +29377,35 @@
 	        _bragiBrowser2['default'].log('RoomsStore:init', 'called..');
 	    },
 	    getInitialState: function getInitialState() {
-	        _bragiBrowser2['default'].log('RoomsStore:getInitialState', '_rooms.toObject()..', _rooms.toObject());
-	        return _rooms.toObject();
+	        _bragiBrowser2['default'].log('RoomsStore:getInitialState', '_rooms', _rooms);
+	        return _rooms;
 	    },
 	    onOpenRoom: function onOpenRoom(room) {
 	        _bragiBrowser2['default'].log('RoomsStore:onOpenRoom', 'called...roomId', room);
 	        if (_activeRoomId) {
-	            _bragiBrowser2['default'].log('RoomsStore:onOpenRoom:_activeRoomId', 'Found activeRoom');
 	            var activeRoomObj = _rooms.get(_activeRoomId);
-	            activeRoomObj.isActive = false;
+	            activeRoomObj = activeRoomObj.set('isActive', false);
 	            _rooms = _rooms.set(_activeRoomId, activeRoomObj);
 	        }
-	        var roomObj = _rooms.get(room.id);
+	        var roomId = room.get('id');
+	        var roomObj = _rooms.get(roomId);
+	        _bragiBrowser2['default'].log('RoomsStore:onOpenRoom', 'roomObj', roomObj);
 	        if (roomObj) {
-	            roomObj.isMember = true;
-	            roomObj.isActive = true;
-	            _rooms = _rooms.set(room.id, roomObj);
-	            _activeRoomId = room.id;
+	            _bragiBrowser2['default'].log('RoomsStore:onOpenRoom', 'Found room to activate it');
+	            roomObj = roomObj.set('isMember', true);
+	            roomObj = roomObj.set('isActive', true);
+	            _rooms = _rooms.set(roomId, roomObj);
+	            _activeRoomId = roomId;
 	        }
 	        this.trigger(this.getAllRooms());
 	    },
-	    onAddRoom: function onAddRoom(room) {
-	        _bragiBrowser2['default'].log('RoomsStore:onAddRoom', 'called..room', room);
-	        _rooms = _rooms.set(room.id, room);
+	    onAddRoom: function onAddRoom(roomMap) {
+	        _bragiBrowser2['default'].log('RoomsStore:onAddRoom', 'called..roomMap', roomMap);
+	        _rooms = _rooms.set(roomMap.get('id'), roomMap);
 	        this.trigger(this.getAllRooms());
 	    },
 	    getAllRooms: function getAllRooms() {
-	        return _rooms.toObject();
+	        return _rooms;
 	    }
 	});
 	module.exports = RoomsStore;
@@ -29474,6 +29480,10 @@
 
 	var _reactRouter = __webpack_require__(161);
 
+	var _immutable = __webpack_require__(268);
+
+	var _immutable2 = _interopRequireDefault(_immutable);
+
 	//==============================================================================
 	// Internal dependencies
 	//==============================================================================
@@ -29505,10 +29515,10 @@
 	  },
 	  mixins: [_reactRouter.Navigation, _reflux2['default'].connectFilter(_storesRoomsStoreJs2['default'], 'room', function (rooms) {
 	    _bragiBrowser2['default'].log('RoomDetail:connectFilter', 'callled...props', this.props.params.roomSlug);
-	    var roomId = Object.keys(rooms).filter((function (roomId) {
-	      return String(rooms[roomId].id) === String(this.props.params.roomSlug);
+	    var roomId = Object.keys(rooms.toObject()).filter((function (roomId) {
+	      return String(rooms.get(roomId).get('id')) === String(this.props.params.roomSlug);
 	    }).bind(this))[0];
-	    return rooms[roomId];
+	    return rooms.get(roomId);
 	  })],
 	  render: function render() {
 	    _bragiBrowser2['default'].log('RoomDetail:render', 'state. roomId:', this.state);
@@ -29526,10 +29536,10 @@
 	            'div',
 	            null,
 	            'Openend room: ',
-	            this.state.room.id
+	            this.state.room.get('id')
 	          )
 	        ),
-	        _reactAddons2['default'].createElement(_MembersListJsx2['default'], { roomId: this.state.room.id })
+	        _reactAddons2['default'].createElement(_MembersListJsx2['default'], { roomId: this.state.room.get('id') })
 	      );
 	    } else {
 	      _bragiBrowser2['default'].log('RoomDetail:render', 'Not found the room');
@@ -56403,6 +56413,14 @@
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
+	var _lodash = __webpack_require__(259);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	var _immutable = __webpack_require__(268);
+
+	var _immutable2 = _interopRequireDefault(_immutable);
+
 	//==============================================================================
 	// Internal dependencies
 	//==============================================================================
@@ -56434,25 +56452,33 @@
 	var RoomList = _reactAddons2['default'].createClass({
 	    displayName: 'RoomList',
 
-	    mixins: [PureRenderMixin],
+	    //mixins: [PureRenderMixin],
+	    // shouldComponentUpdate: function(nextProps, nextState){
+	    //   logger.log("RoomList:shouldComponentUpdate", 'isEqual',
+	    //     nextProps.rooms,
+	    //     this.props.rooms,
+	    //     _.isEqual(nextProps.rooms, this.props.rooms));
+	    //   return !_.isEqual(nextProps.rooms, this.props.rooms);
+	    // },
 	    render: function render() {
-	        _bragiBrowser2['default'].log('RoomList:render', 'called...');
+	        _bragiBrowser2['default'].log('RoomList:render', 'called...', this.props.rooms);
 	        var self = this;
-	        var roomKeys = Object.keys(this.props.rooms);
+	        var roomKeys = Object.keys(this.props.rooms.toObject());
+	        _bragiBrowser2['default'].log('RoomList:render', 'roomKeys...', roomKeys);
 
 	        var roomsList = roomKeys.map(function (roomId, i) {
-	            var room = self.props.rooms[roomId];
+	            var room = self.props.rooms.get(roomId);
 	            var classNameString = (0, _classnames2['default'])('room-list__item', {
-	                'room-list__item--is-member': room.isMember,
-	                'room-list__item--active': room.isActive
+	                'room-list__item--is-member': room.get('isMember'),
+	                'room-list__item--active': room.get('isActive')
 	            });
 	            return _reactAddons2['default'].createElement(
 	                'div',
 	                { className: classNameString,
-	                    key: i,
+	                    key: room.get('id'),
 	                    title: 'open chat room',
 	                    onClick: self.props.onRoomCellClick.bind(null, room) },
-	                room.title
+	                room.get('title')
 	            );
 	        });
 

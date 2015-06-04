@@ -8,6 +8,7 @@ import {
 }
 from 'react-router';
 import logger from 'bragi-browser';
+import Immutable from 'immutable';
 //==============================================================================
 // Internal dependencies
 //==============================================================================
@@ -30,18 +31,18 @@ let RoomListMaster = React.createClass({
     },
     _clickAddRoomsBtn: function() {
         logger.log("RoomListMaster:_clickAddRoomsBtn", "called");
-        let id = Math.floor(Math.random() * 1000);
-        let newRoom = {
-            title: "room-" + id,
-            id: id
-        };
+        let id = Math.floor(Math.random() * 10000);
+        let newRoom = Immutable.Map({
+            "title": "room-" + id,
+            "id": id+""
+        });
         RoomActionCreators.addRoom(newRoom);
     },
     _openRoom: function(room) {
         //Reponds to a click event on a room list item!
         logger.log("RoomListMaster:_openRoom", "called...", room);
         RoomActionCreators.openRoom(room);
-        this.transitionTo('/room/' + room.id);
+        this.transitionTo('/room/' + room.get("id"));
     },
     render() {
         let self = this;

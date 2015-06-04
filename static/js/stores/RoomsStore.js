@@ -25,33 +25,35 @@ let RoomsStore = Reflux.createStore({
         logger.log("RoomsStore:init", "called..");
     },
     getInitialState: function() {
-        logger.log("RoomsStore:getInitialState", "_rooms.toObject()..", _rooms.toObject());
-        return _rooms.toObject();
+        logger.log("RoomsStore:getInitialState", "_rooms", _rooms);
+        return _rooms;
     },
     onOpenRoom: function(room) {
         logger.log("RoomsStore:onOpenRoom", "called...roomId", room);
         if (_activeRoomId) {
-            logger.log("RoomsStore:onOpenRoom:_activeRoomId", "Found activeRoom");
             var activeRoomObj = _rooms.get(_activeRoomId);
-            activeRoomObj.isActive = false;
+            activeRoomObj = activeRoomObj.set("isActive", false);
             _rooms = _rooms.set(_activeRoomId, activeRoomObj);
         }
-        var roomObj = _rooms.get(room.id);
+        var roomId = room.get("id");
+        var roomObj = _rooms.get(roomId);
+        logger.log("RoomsStore:onOpenRoom", "roomObj", roomObj);
         if (roomObj) {
-            roomObj.isMember = true;
-            roomObj.isActive = true;
-            _rooms = _rooms.set(room.id, roomObj);
-            _activeRoomId = room.id;
+            logger.log("RoomsStore:onOpenRoom", "Found room to activate it");
+            roomObj = roomObj.set("isMember", true);
+            roomObj = roomObj.set("isActive", true);
+            _rooms = _rooms.set(roomId, roomObj);
+            _activeRoomId = roomId;
         }
         this.trigger(this.getAllRooms());
     },
-    onAddRoom: function(room) {
-        logger.log("RoomsStore:onAddRoom", "called..room", room);
-        _rooms = _rooms.set(room.id, room);
+    onAddRoom: function(roomMap) {
+        logger.log("RoomsStore:onAddRoom", "called..roomMap", roomMap);
+        _rooms = _rooms.set(roomMap.get("id"), roomMap);
         this.trigger(this.getAllRooms());
     },
     getAllRooms: function() {
-        return _rooms.toObject();
+        return _rooms;
     }
 });
 module.exports = RoomsStore;

@@ -5,7 +5,7 @@ import React from 'react/addons';
 import Reflux from 'reflux';
 import logger from 'bragi-browser';
 import { RouteHandler, Link, Navigation } from 'react-router';
-
+import Immutable from 'immutable';
 //==============================================================================
 // Internal dependencies
 //==============================================================================
@@ -22,10 +22,10 @@ let RoomDetail = React.createClass({
   },
   mixins: [Navigation, Reflux.connectFilter(RoomsStore, "room", function(rooms) {
     logger.log("RoomDetail:connectFilter", "callled...props", this.props.params.roomSlug);
-    var roomId = Object.keys(rooms).filter(function(roomId) {
-      return String(rooms[roomId].id) === String(this.props.params.roomSlug);
+    var roomId = Object.keys(rooms.toObject()).filter(function(roomId) {
+      return String(rooms.get(roomId).get("id")) === String(this.props.params.roomSlug);
     }.bind(this))[0];
-    return rooms[roomId];
+    return rooms.get(roomId);
   })],
   render() {
     logger.log("RoomDetail:render", "state. roomId:", this.state);
@@ -34,8 +34,8 @@ let RoomDetail = React.createClass({
       if(this.state.room){
           logger.log("RoomDetail:render", "Found a room");
           view = <div>
-                <ChatWindow><div>Openend room: {this.state.room.id}</div></ChatWindow>         
-                <MembersList roomId={this.state.room.id}/>
+                <ChatWindow><div>Openend room: {this.state.room.get("id")}</div></ChatWindow>         
+                <MembersList roomId={this.state.room.get("id")}/>
           </div>;
             
       }else{
