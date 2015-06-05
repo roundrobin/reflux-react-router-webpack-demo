@@ -484,6 +484,9 @@ body {
   left: 0;
   width: 100%; }
 
+.message--unfirmed {
+  color: rgba(0, 0, 0, 0.5); }
+
 .room-list {
   position: absolute;
   top: 0;

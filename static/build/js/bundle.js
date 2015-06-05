@@ -29424,7 +29424,7 @@
 
 	'use strict';
 	var Reflux = __webpack_require__(231);
-	var ActionCreators = Reflux.createActions(['addRoom', 'openRoom', 'addMessage']);
+	var ActionCreators = Reflux.createActions(['addRoom', 'openRoom', 'addUnconfirmedMessage']);
 	module.exports = ActionCreators;
 
 /***/ },
@@ -41960,6 +41960,14 @@
 
 	var _reactRouter = __webpack_require__(161);
 
+	var _immutable = __webpack_require__(268);
+
+	var _immutable2 = _interopRequireDefault(_immutable);
+
+	var _classnames = __webpack_require__(253);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
 	//==============================================================================
 	// Internal dependencies
 	//==============================================================================
@@ -41967,6 +41975,10 @@
 	var _actionsActionCreatorJs = __webpack_require__(255);
 
 	var _actionsActionCreatorJs2 = _interopRequireDefault(_actionsActionCreatorJs);
+
+	var _actionsAsyncActionCreatorJs = __webpack_require__(264);
+
+	var _actionsAsyncActionCreatorJs2 = _interopRequireDefault(_actionsAsyncActionCreatorJs);
 
 	var _storesChatMessagesStoreJs = __webpack_require__(270);
 
@@ -41976,57 +41988,41 @@
 	// Constants / Configs
 	//==============================================================================
 	var ENTER_KEY_CODE = 13;
-	var exampleUser = {
+	var exampleUser = _immutable2['default'].Map({
 	    id: 1,
 	    name: 'roundrobin'
-	};
+	});
 	//==============================================================================
 	// Module definition
 	//==============================================================================
 	var ChatWindow = _reactAddons2['default'].createClass({
 	    displayName: 'ChatWindow',
 
+	    mixins: [_reflux2['default'].ListenerMixin],
 	    contextTypes: {
 	        router: _reactAddons2['default'].PropTypes.func
 	    },
 	    getInitialState: function getInitialState() {
+	        _bragiBrowser2['default'].log('ChatWindow:getInitialState', 'called...', this.props.roomId);
 	        return {
-	            text: '',
-	            messages: {
-	                1: {
-	                    text: 'Hello, welcome to the room!',
-	                    date: +new Date(),
-	                    user: exampleUser
-	                }
-	            }
+	            messages: _storesChatMessagesStoreJs2['default'].getInitialState(this.props.roomId),
+	            text: ''
 	        };
 	    },
 	    componentDidMount: function componentDidMount() {
 	        _bragiBrowser2['default'].log('ChatWindow:componentDidMount', 'props', this.props);
+	        this.listenTo(_storesChatMessagesStoreJs2['default'], this._onStatusChange);
+
+	        this._addMessage('Welcome to the chat room!', _immutable2['default'].Map({
+	            id: 2,
+	            name: 'System'
+	        }));
 	    },
-	    _clickSend: function _clickSend() {
-	        _bragiBrowser2['default'].log('ChatWindow:_clickSend', 'called...');
-	        this._addMessage(this.state.text.trim());
-	    },
-	    _handleChange: function _handleChange(event) {
-	        _bragiBrowser2['default'].log('ChatWindow:_onChange', 'called...', event);
+	    _onStatusChange: function _onStatusChange(storeMessages) {
+	        _bragiBrowser2['default'].log('ChatWindow:onStatusChange', 'storeMessages:', storeMessages.toObject());
+
 	        this.setState({
-	            text: event.target.value
-	        });
-	    },
-	    _addMessage: function _addMessage(text) {
-	        _bragiBrowser2['default'].log('ChatWindow:_onChange', 'called...text', text);
-	        var id = Math.floor(Math.random() * 100000);
-	        var messages = this.state.messages;
-	        messages[id] = {
-	            text: text,
-	            date: +new Date(),
-	            user: exampleUser
-	        };
-	        this.setState({
-	            messages: messages,
-	            text: ''
-	        }, function () {
+	            messages: storeMessages.toObject() }, function () {
 	            // After the new message got added to the messages object, we want to make
 	            // sure the message thread DIV is scrolled to the bottom.
 	            var messageThreadNode = this.refs.messagesThread.getDOMNode();
@@ -42034,42 +42030,66 @@
 	            messageThreadNode.scrollTop = scrollHeight;
 	        });
 	    },
+	    _clickSend: function _clickSend() {
+	        _bragiBrowser2['default'].log('ChatWindow:_clickSend', 'called...');
+	        this._addMessage(this.state.text.trim(), exampleUser);
+	        this.setState({
+	            text: ''
+	        });
+	    },
+	    _handleChange: function _handleChange(event) {
+	        _bragiBrowser2['default'].log('ChatWindow:_onChange', 'called...', event);
+
+	        this.setState({
+	            text: event.target.value
+	        });
+	    },
+	    _addMessage: function _addMessage(text, user) {
+	        _bragiBrowser2['default'].log('ChatWindow:_onChange', 'called...text', text);
+	        _actionsActionCreatorJs2['default'].addUnconfirmedMessage(text, this.props.roomId, user);
+	    },
 	    _onKeyDown: function _onKeyDown(event) {
-	        _bragiBrowser2['default'].log('ChatWindow:_onKeyDown', 'called...', event);
 	        if (event.keyCode === ENTER_KEY_CODE) {
 	            event.preventDefault();
 	            var text = this.state.text.trim();
 	            if (text) {
-	                this._addMessage(text);
-	                //ActionCreator.addMessage(msg, this.props.roomId);
+	                this._addMessage(text, exampleUser);
 	                _bragiBrowser2['default'].log('ChatWindow:_onKeyDown', 'Enter key hit!');
+	                this.setState({
+	                    text: ''
+	                });
 	            }
 	        }
 	    },
 	    render: function render() {
 	        _bragiBrowser2['default'].log('ChatWindow:render', 'state', this.state);
 	        var self = this;
-	        //Creates the messages views to the messages container
+
 	        var messages = Object.keys(this.state.messages).sort(function (idFirst, idSecond) {
 	            var objA = self.state.messages[idFirst];
 	            var objB = self.state.messages[idSecond];
-	            return objA.date - objB.date;
+	            return objA.get('date') - objB.get('date');
 	        }).map(function (messageId, index) {
 	            var msg = self.state.messages[messageId];
+
+	            var classString = (0, _classnames2['default'])('message', {
+	                'message--unfirmed': msg.get('confirmed')
+	            });
+
 	            return _reactAddons2['default'].createElement(
 	                'div',
-	                null,
+	                { className: classString, key: index },
 	                '[',
 	                index,
 	                '] ',
 	                _reactAddons2['default'].createElement(
 	                    'b',
 	                    null,
-	                    msg.user.name,
+	                    msg.get('user').get('name'),
 	                    ':'
 	                ),
 	                ' ',
-	                msg.text
+	                msg.get('text')
 	            );
 	        });
 	        return _reactAddons2['default'].createElement(
@@ -42208,7 +42228,10 @@
 	        asyncResult: true
 	    },
 	    'addUser': {},
-	    'removeUser': {}
+	    'removeUser': {},
+	    'addMessage': {
+	        asyncResult: true
+	    }
 	});
 
 	//==============================================================================
@@ -56665,13 +56688,21 @@
 	//
 	// _messages = Immutable.fromJS({
 	//      "roomid-1": {
-	//          "message-1": {user: 1, msg: "Hello, how are you?"}
-	//          "message-2": {user: 2, msg: "thanks you dude, pretty good!"}
-	//          "message-3": {user: 1, msg: "Glad to hear!"}
+	//          "message-1": {user: {...}, msg: "Hello, how are you?", ...}
+	//          "message-2": {user: {...}, msg: "thanks you dude, pretty good!", ...}
+	//          "message-3": {user: {...}, msg: "Glad to hear!", ...}
 	//       }
 	// });
 	//
+
+	var exampleUser = _immutable2['default'].Map({
+	    id: 1,
+	    name: 'roundrobin'
+	});
+
 	var _messages = _immutable2['default'].Map();
+
+	var _unconfirmedId = 0;
 	//==============================================================================
 	// Store definition
 	//==============================================================================
@@ -56680,8 +56711,30 @@
 	    init: function init() {
 	        _bragiBrowser2['default'].log('ChatMessagesStore:init', 'Called');
 	    },
-	    getInitialState: function getInitialState() {
-	        return _messages;
+	    onAddUnconfirmedMessage: function onAddUnconfirmedMessage(text, roomId, user) {
+	        _bragiBrowser2['default'].log('ChatMessagesStore:onAddUnconfirmedMessage', 'called...message %o room %o', text, roomId);
+
+	        var randomMessageId = Math.floor(Math.random() * 1000000);
+
+	        _messages = _messages.setIn([roomId, randomMessageId], _immutable2['default'].Map({
+	            id: _unconfirmedId,
+	            text: text,
+	            date: +new Date(),
+	            user: user,
+	            confirmed: false
+	        }));
+
+	        _unconfirmedId++;
+
+	        _bragiBrowser2['default'].log('ChatMessagesStore:onAddUnconfirmedMessage', '_messages', _messages.toJS());
+
+	        this.trigger(this.getMessages(roomId));
+	    },
+	    getInitialState: function getInitialState(roomId) {
+	        return {};
+	    },
+	    getMessages: function getMessages(roomId) {
+	        return _messages.get(roomId);
 	    }
 	});
 	module.exports = ChatMessagesStore;

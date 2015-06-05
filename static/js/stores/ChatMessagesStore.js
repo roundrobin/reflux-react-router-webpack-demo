@@ -20,13 +20,21 @@ import AsyncActionCreator from '../actions/AsyncActionCreator';
 //
 // _messages = Immutable.fromJS({
 //      "roomid-1": {
-//          "message-1": {user: 1, msg: "Hello, how are you?"}
-//          "message-2": {user: 2, msg: "thanks you dude, pretty good!"}
-//          "message-3": {user: 1, msg: "Glad to hear!"}
+//          "message-1": {user: {...}, msg: "Hello, how are you?", ...}
+//          "message-2": {user: {...}, msg: "thanks you dude, pretty good!", ...}
+//          "message-3": {user: {...}, msg: "Glad to hear!", ...}
 //       }
 // });
 //
+
+let exampleUser = Immutable.Map({
+    id: 1,
+    name: "roundrobin"
+});
+
 let _messages = Immutable.Map();
+
+let _unconfirmedId = 0;
 //==============================================================================
 // Store definition
 //==============================================================================
@@ -35,8 +43,32 @@ let ChatMessagesStore = Reflux.createStore({
     init: function() {
         logger.log("ChatMessagesStore:init", "Called");
     },
-    getInitialState: function() {
-        return _messages;
+    onAddUnconfirmedMessage: function(text, roomId, user){
+    	logger.log("ChatMessagesStore:onAddUnconfirmedMessage", "called...message %o room %o", text, roomId);	
+
+        let randomMessageId= Math.floor(Math.random()*1000000);
+
+    	_messages = _messages.setIn([roomId, randomMessageId], Immutable.Map({
+            id: _unconfirmedId,
+            text: text,
+            date: +new Date(),
+            user: user,
+            confirmed: false
+        }));
+
+        _unconfirmedId++;
+
+
+        logger.log("ChatMessagesStore:onAddUnconfirmedMessage", "_messages", _messages.toJS());   
+
+    	this.trigger(this.getMessages(roomId));
+    			
+    },
+    getInitialState: function(roomId){
+        return {};
+    },
+    getMessages: function(roomId) {
+        return _messages.get(roomId);
     }
 });
 module.exports = ChatMessagesStore;

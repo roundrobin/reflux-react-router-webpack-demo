@@ -3,6 +3,6 @@ var Reflux = require('reflux');
 var ActionCreators = Reflux.createActions([
     'addRoom',
     'openRoom',
-    'addMessage'
+    'addUnconfirmedMessage'
 ]);
 module.exports = ActionCreators;

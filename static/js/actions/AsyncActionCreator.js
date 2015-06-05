@@ -15,7 +15,10 @@ let Actions = Reflux.createActions({
     	asyncResult: true
     },
     "addUser" : {},
-    "removeUser" : {}
+    "removeUser" : {},
+    "addMessage" : {
+        asyncResult: true
+    }
 });
 
 //==============================================================================
