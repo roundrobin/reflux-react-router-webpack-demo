@@ -91,7 +91,7 @@
 
 	__webpack_require__(263);
 
-	// Builds our CSS file!
+	// Builds the main CSS file!
 	//------------------------------------------------------------------------------
 	// Config
 	//------------------------------------------------------------------------------
@@ -20549,6 +20549,16 @@
 /* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	 *
+	 * `routes.jsx` 
+	 *
+	 * Defines the available URL routes in this single page application (SPA). It uses
+	 * the battle-tested `react-router` component, which allows all the rounting 
+	 * defintions through a declarative set of custom tags. Those tags (ex: <Route>)
+	 * can be nested to be able to implement master/detail views.
+	 *
+	 */
 	//==============================================================================
 	// External dependencies
 	//==============================================================================

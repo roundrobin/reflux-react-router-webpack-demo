@@ -1,9 +1,18 @@
+/*
+ *
+ * `routes.jsx` 
+ *
+ * Defines the available URL routes in this single page application (SPA). It uses
+ * the battle-tested `react-router` component, which allows all the rounting 
+ * defintions through a declarative set of custom tags. Those tags (ex: <Route>)
+ * can be nested to be able to implement master/detail views.
+ *
+ */
 //==============================================================================
 // External dependencies
 //==============================================================================
 import React from 'react';
 import { Route, DefaultRoute,  NotFoundRoute} from 'react-router';
-
 //==============================================================================
 // Internal dependencies
 //==============================================================================

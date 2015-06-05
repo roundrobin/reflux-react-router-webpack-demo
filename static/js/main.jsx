@@ -23,7 +23,7 @@ import logger from 'bragi-browser';
 import WebAPIUtils from './utils/WebAPIUtils.js';
 import AsyncActionCreator from './actions/AsyncActionCreator.js';
 import router from './router.jsx';
-import  '../css/main.scss'; // Builds our CSS file!
+import  '../css/main.scss'; // Builds the main CSS file!
 //------------------------------------------------------------------------------
 // Config
 //------------------------------------------------------------------------------
