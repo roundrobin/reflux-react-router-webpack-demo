@@ -52,9 +52,9 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 
 ## Advantages Reflux
 * Small code base (~13kb)
-
-
-
+* For devs with Backbone.js background easy to pick up
+* Has hooks into the event lifecyle (preEmit, shouldEmit)
+	
 
 ## Not included
 * Isomorphic setup (no server side rendering)
