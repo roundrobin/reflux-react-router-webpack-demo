@@ -7,26 +7,14 @@ This demo app uses `Reflux` as a Flux implementation and `React` in conjunction 
 
 ## Install dependencies
 
-Install the two following global node modules for ease.
+
 
 ```bash
-$ npm install -g webpack
+$ npm install -g webpack            # Install the two following global node modules for ease.
 $ npm install -g webpack-dev-server
+$ $ npm install -d                  # Next install the local dependencies
+$ npm run local                     # And finally build the app assets (bundle.js and main.css) 
 ```
-
-Next install the local dependencies:
-```bash
-$ npm install -d
-```
-
-And finally build the app assets (bundle.js and main.css) 
-
-```bash
-$ npm run dev
-```
-
-## Run demo server
-
 To run a simple http server (runs on port `8124` and be configured in webpack.config.js) 
 run: 
 
@@ -35,7 +23,6 @@ $ npm run dev
 ```
 
 Then go to `http://localhost:8124` in your browser
-
 
 ## App
 
@@ -49,6 +36,7 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 * CSS animations via React's CSSTransitionGroup.
 * Canonical URLs via React-Router
 * Application logging via Bragi
+* Data structures with Immutable.js
 
 ## Advantages Reflux
 * Small code base (~13kb)

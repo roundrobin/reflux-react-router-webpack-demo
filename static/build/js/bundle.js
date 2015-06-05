@@ -29421,7 +29421,7 @@
 
 	'use strict';
 	var Reflux = __webpack_require__(231);
-	var ActionCreators = Reflux.createActions(['addRoom', 'openRoom']);
+	var ActionCreators = Reflux.createActions(['addRoom', 'openRoom', 'addMessage']);
 	module.exports = ActionCreators;
 
 /***/ },
@@ -29518,7 +29518,12 @@
 	  contextTypes: {
 	    router: _reactAddons2['default'].PropTypes.func
 	  },
-	  mixins: [_reactRouter.Navigation, _reflux2['default'].connectFilter(_storesRoomsStoreJs2['default'], 'room', function (rooms) {
+	  mixins: [
+	  // Injects react-routers Navigation mixin, to be able to transition between
+	  // other routes.
+	  _reactRouter.Navigation,
+	  // Connect to the Room store and pick the object for the passed in room.
+	  _reflux2['default'].connectFilter(_storesRoomsStoreJs2['default'], 'room', function (rooms) {
 	    _bragiBrowser2['default'].log('RoomDetail:connectFilter', 'callled...props', this.props.params.roomSlug);
 	    var roomId = Object.keys(rooms.toObject()).filter((function (roomId) {
 	      return String(rooms.get(roomId).get('id')) === String(this.props.params.roomSlug);
@@ -29529,6 +29534,7 @@
 	    _bragiBrowser2['default'].log('RoomDetail:render', 'state. roomId:', this.state);
 	    var self = this;
 	    var view;
+	    // If a room was found in the store, we render the chat window and members list.
 	    if (this.state.room) {
 	      _bragiBrowser2['default'].log('RoomDetail:render', 'Found a room');
 	      view = _reactAddons2['default'].createElement(
@@ -29536,7 +29542,7 @@
 	        null,
 	        _reactAddons2['default'].createElement(
 	          _ChatWindowJsx2['default'],
-	          null,
+	          { roomId: this.state.room.get('id') },
 	          _reactAddons2['default'].createElement(
 	            'div',
 	            null,
@@ -29547,6 +29553,8 @@
 	        _reactAddons2['default'].createElement(_MembersListJsx2['default'], { roomId: this.state.room.get('id') })
 	      );
 	    } else {
+	      // If for some reason, no room was found in the store, we transition back to
+	      // the list view
 	      _bragiBrowser2['default'].log('RoomDetail:render', 'Not found the room');
 	      view = 'room not found';
 	      this.transitionTo('/list/popular');
@@ -29558,7 +29566,6 @@
 	    );
 	  }
 	});
-
 	exports['default'] = RoomDetail;
 	module.exports = exports['default'];
 
@@ -41956,25 +41963,51 @@
 	//==============================================================================
 	// Internal dependencies
 	//==============================================================================
-	//import ActionCreators from '../actions/ActionCreators.js';
-	//import RoomsStore from '../stores/RoomsStore.js';
 
+	var _actionsActionCreatorJs = __webpack_require__(255);
+
+	var _actionsActionCreatorJs2 = _interopRequireDefault(_actionsActionCreatorJs);
+
+	var _storesChatMessagesStoreJs = __webpack_require__(270);
+
+	var _storesChatMessagesStoreJs2 = _interopRequireDefault(_storesChatMessagesStoreJs);
+
+	//==============================================================================
+	// Constants / Configs
+	//==============================================================================
+	var ENTER_KEY_CODE = 13;
 	//==============================================================================
 	// Module definition
 	//==============================================================================
 	var ChatWindow = _reactAddons2['default'].createClass({
 	  displayName: 'ChatWindow',
 
-	  contextTypes: {
-	    router: _reactAddons2['default'].PropTypes.func
-	  },
 	  mixins: [_reactRouter.Navigation],
+	  getInitialState: function getInitialState() {
+	    return { text: '' };
+	  },
 	  componentDidMount: function componentDidMount() {
 	    _bragiBrowser2['default'].log('ChatWindow:componentDidMount', 'props', this.props);
 	  },
 	  _clickSend: function _clickSend() {
 	    _bragiBrowser2['default'].log('ChatWindow:_clickSend', 'called...');
 	    alert('send message');
+	  },
+	  _handleChange: function _handleChange(event) {
+	    _bragiBrowser2['default'].log('ChatWindow:_onChange', 'called...', event);
+	    this.setState({ value: event.text.value });
+	  },
+	  _onKeyDown: function _onKeyDown(event) {
+	    _bragiBrowser2['default'].log('ChatWindow:_onKeyDown', 'called...', event);
+	    if (event.keyCode === ENTER_KEY_CODE) {
+	      event.preventDefault();
+	      var text = this.state.text.trim();
+	      if (text) {
+	        _actionsActionCreatorJs2['default'].addMessage(msg, this.props.roomId);
+	        _bragiBrowser2['default'].log('ChatWindow:_onKeyDown', 'Enter key hit!');
+	      }
+	      this.setState({ text: '' });
+	    }
 	  },
 	  render: function render() {
 	    var self = this;
@@ -41996,7 +42029,12 @@
 	      _reactAddons2['default'].createElement(
 	        'div',
 	        { className: 'chat-window__reply-box' },
-	        _reactAddons2['default'].createElement('input', { className: 'chat-window__input', type: 'text', placeholder: 'Type chat message here' }),
+	        _reactAddons2['default'].createElement('input', { className: 'chat-window__input',
+	          type: 'text',
+	          onKeyDown: this._onKeyDown,
+	          onChange: this._handleChange,
+	          value: this.state.text,
+	          placeholder: 'Type chat message here' }),
 	        _reactAddons2['default'].createElement(
 	          'div',
 	          { className: 'chat-window__send', onClick: this._clickSend },
@@ -51387,9 +51425,22 @@
 	var _actionsAsyncActionCreator2 = _interopRequireDefault(_actionsAsyncActionCreator);
 
 	//==============================================================================
-	// Private data structure
+	// Private data structures
 	//==============================================================================
+	//
+	// The `_members` object maps `roomId` to an map of `userId`.
+	// An examples of that structure looks like:
+	//
+	// _members = Immutable.fromJS({
+	//      "roomid-1": {
+	//          "user-1": {id: "user-1", name: "Scotty Pippen"}
+	//          "user-2": {id: "user-2", name: "Michael Jordan"}
+	//          "user-3": {id: "user-3", name: "Shaquille o'neal"}
+	//       }
+	// });
+	//
 	var _members = _immutable2['default'].Map();
+	// Keeps track of all intervals created when opening a rooms!
 	var _checkIntervals = [];
 	//==============================================================================
 	// Store definition
@@ -51426,30 +51477,30 @@
 	        }
 	        var activeRoom = _RoomsStore2['default'].getActiveRoom();
 	        // Check if there is currently an active room set
-	        if (activeRoom) {
-	            _bragiBrowser2['default'].log('MembersStore:onOpenRoom:activeRoom', 'found active room', activeRoom);
-	            // If the user had previously rooms open, we clear out all the setIntervals.
-	            _checkIntervals.forEach(function (intervalId) {
-	                _bragiBrowser2['default'].log('MembersStore:onOpenRoom:activeRoom', 'clear interval', intervalId);
-	                clearInterval(intervalId);
-	            });
-	            // For demo purposes we add or remove random users to the members during
-	            // a session in a room.
-	            var intervalId = setInterval(function () {
-	                // Choose randomly between 0 and 1, and either add or remove a member.
-	                if (Math.round(Math.random()) === 1) {
-	                    var id = Math.floor(Math.random() * 1000000) + '';
-	                    _bragiBrowser2['default'].log('MembersStore:onOpenRoom:activeRoom', 'Add new user', id);
-	                    self.onAddUser(activeRoom.get('id'), _immutable2['default'].Map({
-	                        'id': id,
-	                        name: 'Visitor-' + id
-	                    }));
-	                } else {
-	                    self.onRemoveUser(activeRoom.get('id'));
-	                }
-	            }, 1000);
-	            _checkIntervals.push(intervalId);
-	        }
+	        // if (activeRoom) {
+	        //     logger.log("MembersStore:onOpenRoom:activeRoom", "found active room", activeRoom);
+	        //     // If the user had previously rooms open, we clear out all the setIntervals.
+	        //     _checkIntervals.forEach(function(intervalId) {
+	        //         logger.log("MembersStore:onOpenRoom:activeRoom", "clear interval", intervalId);
+	        //         clearInterval(intervalId);
+	        //     });
+	        //     // For demo purposes we add or remove random users to the members during
+	        //     // a session in a room.
+	        //     var intervalId = setInterval(function() {
+	        //         // Choose randomly between 0 and 1, and either add or remove a member.
+	        //         if (Math.round(Math.random()) === 1) {
+	        //             var id = Math.floor(Math.random() * 1000000) + "";
+	        //             logger.log("MembersStore:onOpenRoom:activeRoom", "Add new user", id);
+	        //             self.onAddUser(activeRoom.get("id"), Immutable.Map({
+	        //                 "id": id,
+	        //                 name: "Visitor-" + id
+	        //             }));
+	        //         } else {
+	        //             self.onRemoveUser(activeRoom.get("id"));
+	        //         }
+	        //     }, 1000);
+	        //     _checkIntervals.push(intervalId);
+	        // }
 	        this.trigger(this.getAllMembers());
 	    },
 	    onAddUser: function onAddUser(roomId, user) {
@@ -56500,6 +56551,79 @@
 
 	exports['default'] = RoomList;
 	module.exports = exports['default'];
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//==============================================================================
+	// External dependencies
+	//==============================================================================
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _bragiBrowser = __webpack_require__(200);
+
+	var _bragiBrowser2 = _interopRequireDefault(_bragiBrowser);
+
+	var _reflux = __webpack_require__(231);
+
+	var _reflux2 = _interopRequireDefault(_reflux);
+
+	var _lodash = __webpack_require__(259);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	var _immutable = __webpack_require__(268);
+
+	var _immutable2 = _interopRequireDefault(_immutable);
+
+	//==============================================================================
+	// Internal dependencies
+	//==============================================================================
+
+	var _RoomsStore = __webpack_require__(254);
+
+	var _RoomsStore2 = _interopRequireDefault(_RoomsStore);
+
+	var _actionsActionCreator = __webpack_require__(255);
+
+	var _actionsActionCreator2 = _interopRequireDefault(_actionsActionCreator);
+
+	var _actionsAsyncActionCreator = __webpack_require__(264);
+
+	var _actionsAsyncActionCreator2 = _interopRequireDefault(_actionsAsyncActionCreator);
+
+	//==============================================================================
+	// Private data structures
+	//==============================================================================
+	//
+	// The `_messages` object maps `roomId` to an map of `messageId`.
+	// An examples of that structure looks like:
+	//
+	// _messages = Immutable.fromJS({
+	//      "roomid-1": {
+	//          "message-1": {user: 1, msg: "Hello, how are you?"}
+	//          "message-2": {user: 2, msg: "thanks you dude, pretty good!"}
+	//          "message-3": {user: 1, msg: "Glad to hear!"}
+	//       }
+	// });
+	//
+	var _messages = _immutable2['default'].Map();
+	//==============================================================================
+	// Store definition
+	//==============================================================================
+	var ChatMessagesStore = _reflux2['default'].createStore({
+	    listenables: [_actionsAsyncActionCreator2['default'], _actionsActionCreator2['default']],
+	    init: function init() {
+	        _bragiBrowser2['default'].log('ChatMessagesStore:init', 'Called');
+	    },
+	    getInitialState: function getInitialState() {
+	        return _messages;
+	    }
+	});
+	module.exports = ChatMessagesStore;
 
 /***/ }
 /******/ ]);

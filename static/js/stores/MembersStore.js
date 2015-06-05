@@ -12,9 +12,22 @@ import RoomsStore from './RoomsStore';
 import ActionCreator from '../actions/ActionCreator';
 import AsyncActionCreator from '../actions/AsyncActionCreator';
 //==============================================================================
-// Private data structure
+// Private data structures
 //==============================================================================
+//
+// The `_members` object maps `roomId` to an map of `userId`.
+// An examples of that structure looks like:
+//
+// _members = Immutable.fromJS({
+//      "roomid-1": {
+//          "user-1": {id: "user-1", name: "Scotty Pippen"}
+//          "user-2": {id: "user-2", name: "Michael Jordan"}
+//          "user-3": {id: "user-3", name: "Shaquille o'neal"}
+//       }
+// });
+//
 var _members = Immutable.Map();
+// Keeps track of all intervals created when opening a rooms!
 var _checkIntervals = [];
 //==============================================================================
 // Store definition
@@ -51,30 +64,30 @@ let MembersStore = Reflux.createStore({
         }
         var activeRoom = RoomsStore.getActiveRoom();
         // Check if there is currently an active room set
-        if (activeRoom) {
-            logger.log("MembersStore:onOpenRoom:activeRoom", "found active room", activeRoom);
-            // If the user had previously rooms open, we clear out all the setIntervals.
-            _checkIntervals.forEach(function(intervalId) {
-                logger.log("MembersStore:onOpenRoom:activeRoom", "clear interval", intervalId);
-                clearInterval(intervalId);
-            });
-            // For demo purposes we add or remove random users to the members during
-            // a session in a room.
-            var intervalId = setInterval(function() {
-                // Choose randomly between 0 and 1, and either add or remove a member.
-                if (Math.round(Math.random()) === 1) {
-                    var id = Math.floor(Math.random() * 1000000) + "";
-                    logger.log("MembersStore:onOpenRoom:activeRoom", "Add new user", id);
-                    self.onAddUser(activeRoom.get("id"), Immutable.Map({
-                        "id": id,
-                        name: "Visitor-" + id
-                    }));
-                } else {
-                    self.onRemoveUser(activeRoom.get("id"));
-                }
-            }, 1000);
-            _checkIntervals.push(intervalId);
-        }
+        // if (activeRoom) {
+        //     logger.log("MembersStore:onOpenRoom:activeRoom", "found active room", activeRoom);
+        //     // If the user had previously rooms open, we clear out all the setIntervals.
+        //     _checkIntervals.forEach(function(intervalId) {
+        //         logger.log("MembersStore:onOpenRoom:activeRoom", "clear interval", intervalId);
+        //         clearInterval(intervalId);
+        //     });
+        //     // For demo purposes we add or remove random users to the members during
+        //     // a session in a room.
+        //     var intervalId = setInterval(function() {
+        //         // Choose randomly between 0 and 1, and either add or remove a member.
+        //         if (Math.round(Math.random()) === 1) {
+        //             var id = Math.floor(Math.random() * 1000000) + "";
+        //             logger.log("MembersStore:onOpenRoom:activeRoom", "Add new user", id);
+        //             self.onAddUser(activeRoom.get("id"), Immutable.Map({
+        //                 "id": id,
+        //                 name: "Visitor-" + id
+        //             }));
+        //         } else {
+        //             self.onRemoveUser(activeRoom.get("id"));
+        //         }
+        //     }, 1000);
+        //     _checkIntervals.push(intervalId);
+        // }
         this.trigger(this.getAllMembers());
     },
     onAddUser: function(roomId, user) {
