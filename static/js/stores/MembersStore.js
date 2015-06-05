@@ -34,20 +34,20 @@ var _checkIntervals = [];
 //==============================================================================
 let MembersStore = Reflux.createStore({
     listenables: [AsyncActionCreator, ActionCreator],
-    init: function() {
+    init() {
         logger.log("MembersStore:init", "Called");
     },
-    getInitialState: function() {
+    getInitialState() {
         return _members;
     },
-    getAllMembers: function() {
+    getAllMembers() {
         return _members;
     },
-    onLoadRoomsCompleted: function(data) {
+    onLoadRoomsCompleted(data) {
         logger.log("MembersStore:onLoadRoomsCompleted", "called...", data);
         this.trigger(_members);
     },
-    onOpenRoom: function(room) {
+    onOpenRoom(room) {
         logger.log("MembersStore:onOpenRoom", "called...", room);
         var self = this;
         if (!_members[room.get("id")]) {
@@ -90,7 +90,7 @@ let MembersStore = Reflux.createStore({
         // }
         this.trigger(this.getAllMembers());
     },
-    onAddUser: function(roomId, user) {
+    onAddUser(roomId, user) {
         logger.log("MembersStore:onAddUser", "called...", roomId, user);
         //Adds a new user in room `roomId` with the following data `user`
         var members = _members.getIn([roomId, "members"]);
@@ -107,7 +107,7 @@ let MembersStore = Reflux.createStore({
             this.trigger(this.getAllMembers());
         }
     },
-    onRemoveUser: function(roomId) {
+    onRemoveUser(roomId) {
         logger.log("MembersStore:onRemoveUser", "Remove a random user in room:", roomId);
         var keys = Object.keys(_members.get(roomId).get("members").toObject());
         // Get a random key from the members map

@@ -13,21 +13,33 @@ import ActionCreators from '../actions/ActionCreator';
 //==============================================================================
 // Keeps track of which is the currently active room!
 var _activeRoomId;
-// Private data structure holding all views.
+//
+// The `_rooms` object maps a`roomId` to an map of room objects.
+// An examples of that structure looks like:
+//
+// _rooms = Immutable.fromJS({
+//      "roomid-1": {
+//          id: "roomid-1",    
+//          name: "demo room",
+//          isActive: false,
+//          isMember: false    
+//       }
+// });
+//
 var _rooms = Immutable.Map();
 //==============================================================================
 // Store definition
 //==============================================================================
 let RoomsStore = Reflux.createStore({
     listenables: ActionCreators,
-    init: function() {
+    init() {
         logger.log("RoomsStore:init", "called..");
     },
-    getInitialState: function() {
+    getInitialState() {
         logger.log("RoomsStore:getInitialState", "_rooms", _rooms);
         return _rooms;
     },
-    onOpenRoom: function(room) {
+    onOpenRoom(room) {
         logger.log("RoomsStore:onOpenRoom", "called...roomId", room);
         // If a active room is set, we change it's active status to false!
         if (_activeRoomId) {
@@ -49,19 +61,20 @@ let RoomsStore = Reflux.createStore({
         }
         this.trigger(this.getAllRooms());
     },
-    onAddRoom: function(roomMap) {
+    onAddRoom(roomMap) {
         logger.log("RoomsStore:onAddRoom", "called..roomMap", roomMap);
         _rooms = _rooms.set(roomMap.get("id"), roomMap);
         this.trigger(this.getAllRooms());
     },
-    getActiveRoom: function(){
+    getActiveRoom(){
         logger.log("RoomsStore:getActiveRoom", "called...");
+        // If there is a active room set, we return it!
         if(_activeRoomId){
             return _rooms.get(_activeRoomId); 
         }
         return;        
     },
-    getAllRooms: function() {
+    getAllRooms() {
         logger.log("RoomsStore:getAllRooms", "called...");
         return _rooms;
     }

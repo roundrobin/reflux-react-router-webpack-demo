@@ -40,10 +40,10 @@ let _unconfirmedId = 0;
 //==============================================================================
 let ChatMessagesStore = Reflux.createStore({
     listenables: [AsyncActionCreator, ActionCreator],
-    init: function() {
+    init() {
         logger.log("ChatMessagesStore:init", "Called");
     },
-    onAddUnconfirmedMessage: function(text, roomId, user){
+    onAddUnconfirmedMessage(text, roomId, user){
     	logger.log("ChatMessagesStore:onAddUnconfirmedMessage", "called...message %o room %o", text, roomId);	
 
         let randomMessageId= Math.floor(Math.random()*1000000);
@@ -64,10 +64,10 @@ let ChatMessagesStore = Reflux.createStore({
     	this.trigger(this.getMessages(roomId));
     			
     },
-    getInitialState: function(roomId){
+    getInitialState(roomId){
         return {};
     },
-    getMessages: function(roomId) {
+    getMessages(roomId) {
         return _messages.get(roomId);
     }
 });

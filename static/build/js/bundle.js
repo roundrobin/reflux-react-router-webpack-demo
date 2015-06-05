@@ -25520,9 +25520,6 @@
 	var _bragiBrowser2 = _interopRequireDefault(_bragiBrowser);
 
 	//==============================================================================
-	// Config
-	//==============================================================================
-	//==============================================================================
 	// Module definition
 	//==============================================================================
 	var AppHandler = _reactAddons2['default'].createClass({
@@ -29386,7 +29383,19 @@
 	//==============================================================================
 	// Keeps track of which is the currently active room!
 	var _activeRoomId;
-	// Private data structure holding all views.
+	//
+	// The `_rooms` object maps a`roomId` to an map of room objects.
+	// An examples of that structure looks like:
+	//
+	// _rooms = Immutable.fromJS({
+	//      "roomid-1": {
+	//          id: "roomid-1",   
+	//          name: "demo room",
+	//          isActive: false,
+	//          isMember: false   
+	//       }
+	// });
+	//
 	var _rooms = _immutable2['default'].Map();
 	//==============================================================================
 	// Store definition
@@ -29429,6 +29438,7 @@
 	    },
 	    getActiveRoom: function getActiveRoom() {
 	        _bragiBrowser2['default'].log('RoomsStore:getActiveRoom', 'called...');
+	        // If there is a active room set, we return it!
 	        if (_activeRoomId) {
 	            return _rooms.get(_activeRoomId);
 	        }
