@@ -2,7 +2,7 @@
 
 This demo app uses `Reflux` as a Flux implementation and `React` in conjunction with the `react-router` component. It's goal is to show how to use Flux in modern web apps.
 
-![Demo of the app](https://raw.githubusercontent.com/roundrobin/reflux-react-router-webpack-demo/master/docs/DemoApp.gif|width=500px)
+![Demo of the app](https://raw.githubusercontent.com/roundrobin/reflux-react-router-webpack-demo/master/docs/DemoApp.gif)
 
 
 ## Install dependencies
