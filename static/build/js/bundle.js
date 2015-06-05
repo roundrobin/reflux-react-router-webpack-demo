@@ -44,9 +44,23 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	//==============================================================================
+	/*
+	 *
+	 * `main.jsx` 
+	 *
+	 * main.jsx kicks of the rendering of this react.js demo app. Webpack compiles
+	 * all it's dependencies to a file called bundle.js.
+	 *
+	 * This file is also responsible for transcompiling the scss file (see main.scss
+	 * as an entry point) to CSS.
+	 * 
+	 * The initialization phase of the app start with a ajax call to demo how those are 
+	 * integrated in a React/Flux app.
+	 *
+	 */
+	//------------------------------------------------------------------------------
 	// External dependencies
-	//==============================================================================
+	//------------------------------------------------------------------------------
 	'use strict';
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -55,9 +69,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	//==============================================================================
+	var _bragiBrowser = __webpack_require__(200);
+
+	var _bragiBrowser2 = _interopRequireDefault(_bragiBrowser);
+
+	//------------------------------------------------------------------------------
 	// Internal dependencies
-	//==============================================================================
+	//------------------------------------------------------------------------------
 
 	var _utilsWebAPIUtilsJs = __webpack_require__(157);
 
@@ -67,10 +85,6 @@
 
 	var _actionsAsyncActionCreatorJs2 = _interopRequireDefault(_actionsAsyncActionCreatorJs);
 
-	var _bragiBrowser = __webpack_require__(200);
-
-	var _bragiBrowser2 = _interopRequireDefault(_bragiBrowser);
-
 	var _routerJsx = __webpack_require__(158);
 
 	var _routerJsx2 = _interopRequireDefault(_routerJsx);
@@ -78,20 +92,19 @@
 	__webpack_require__(263);
 
 	// Builds our CSS file!
-	//==============================================================================
+	//------------------------------------------------------------------------------
 	// Config
-	//==============================================================================
+	//------------------------------------------------------------------------------
 	var rootEl = document.getElementById('main');
-
-	//==============================================================================
+	//------------------------------------------------------------------------------
 	// Module definition
-	//==============================================================================
-	_bragiBrowser2['default'].log('main', 'called...');
+	//------------------------------------------------------------------------------
+	_bragiBrowser2['default'].log('main', 'start rendering the app...');
 
 	_actionsAsyncActionCreatorJs2['default'].loadRooms();
 
 	_routerJsx2['default'].run(function (Handler, state) {
-		_react2['default'].render(_react2['default'].createElement(Handler, state), rootEl);
+	  _react2['default'].render(_react2['default'].createElement(Handler, state), rootEl);
 	});
 
 /***/ },
@@ -41948,6 +41961,7 @@
 	 * from a store and some of the data add locally. In this example the state of 
 	 * the HTML input field is kept locally, but the messages come from the 
 	 * `ChatMessagesStore`.
+	 *
 	 */
 	//==============================================================================
 	// External dependencies

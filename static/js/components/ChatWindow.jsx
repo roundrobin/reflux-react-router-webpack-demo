@@ -11,6 +11,7 @@
  * from a store and some of the data add locally. In this example the state of 
  * the HTML input field is kept locally, but the messages come from the 
  * `ChatMessagesStore`.
+ *
  */
 //==============================================================================
 // External dependencies
