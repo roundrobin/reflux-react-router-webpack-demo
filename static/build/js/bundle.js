@@ -41935,6 +41935,20 @@
 /* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	 *
+	 * `ChatWindow` component
+	 *
+	 * Usage:
+	 * ```
+	 *   <ChatWindow roomId="123" />
+	 * ```     
+	 * 
+	 * This view shows how to implement a set ofstate which has some of it's data derrive
+	 * from a store and some of the data add locally. In this example the state of 
+	 * the HTML input field is kept locally, but the messages come from the 
+	 * `ChatMessagesStore`.
+	 */
 	//==============================================================================
 	// External dependencies
 	//==============================================================================
@@ -42012,7 +42026,6 @@
 	    componentDidMount: function componentDidMount() {
 	        _bragiBrowser2['default'].log('ChatWindow:componentDidMount', 'props', this.props);
 	        this.listenTo(_storesChatMessagesStoreJs2['default'], this._onStatusChange);
-
 	        this._addMessage('Welcome to the chat room!', _immutable2['default'].Map({
 	            id: 2,
 	            name: 'System'
@@ -42020,7 +42033,6 @@
 	    },
 	    _onStatusChange: function _onStatusChange(storeMessages) {
 	        _bragiBrowser2['default'].log('ChatWindow:onStatusChange', 'storeMessages:', storeMessages.toObject());
-
 	        this.setState({
 	            messages: storeMessages.toObject() }, function () {
 	            // After the new message got added to the messages object, we want to make
@@ -42039,7 +42051,6 @@
 	    },
 	    _handleChange: function _handleChange(event) {
 	        _bragiBrowser2['default'].log('ChatWindow:_onChange', 'called...', event);
-
 	        this.setState({
 	            text: event.target.value
 	        });
@@ -42064,24 +42075,21 @@
 	    render: function render() {
 	        _bragiBrowser2['default'].log('ChatWindow:render', 'state', this.state);
 	        var self = this;
-
 	        var messages = Object.keys(this.state.messages).sort(function (idFirst, idSecond) {
 	            var objA = self.state.messages[idFirst];
 	            var objB = self.state.messages[idSecond];
 	            return objA.get('date') - objB.get('date');
 	        }).map(function (messageId, index) {
 	            var msg = self.state.messages[messageId];
-
 	            var classString = (0, _classnames2['default'])('message', {
 	                'message--unfirmed': msg.get('confirmed')
 	            });
-
 	            return _reactAddons2['default'].createElement(
 	                'div',
 	                { className: classString, key: index },
 	                '[',
 	                index,
-	                '] ',
+	                ']',
 	                _reactAddons2['default'].createElement(
 	                    'b',
 	                    null,
