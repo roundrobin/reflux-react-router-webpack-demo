@@ -3,7 +3,7 @@
 //==============================================================================
 import React from 'react/addons';
 import Reflux from 'reflux';
-import { RouteHandler, Link, Navigation} from 'react-router';
+import { RouteHandler, Link} from 'react-router';
 import logger from 'bragi-browser';
 import Immutable from 'immutable';
 //==============================================================================
@@ -20,7 +20,6 @@ let RoomListMaster = React.createClass({
         router: React.PropTypes.func
     },
     mixins: [
-        Navigation,
         Reflux.connect(RoomsStore, 'rooms')
     ],
     componentDidMount() {
@@ -37,7 +36,7 @@ let RoomListMaster = React.createClass({
     },
     _onRoomOpen: function(room){
         ActionCreators.openRoom(room);
-        this.transitionTo('/room/' + room.get("id"));
+        this.context.router.transitionTo('/room/' + room.get("id"));
             
     },
     render() {

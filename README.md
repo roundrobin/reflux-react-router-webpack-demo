@@ -10,7 +10,7 @@ This demo app uses `Reflux` as a Flux implementation and `React` in conjunction 
 
 
 ```bash
-$ npm install -g webpack            # Install the two following global node modules for ease.
+$ npm install -g webpack            # Install the following two global node modules for ease.
 $ npm install -g webpack-dev-server
 $ npm install -d                    # Next install the local dependencies
 $ npm run local                     # And finally build the app assets (bundle.js and main.css) 

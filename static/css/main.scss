@@ -76,6 +76,15 @@ body {
     }
 }
 
+.messages-thread{
+    @include position(absolute, 60px 0 0 0);
+    height: calc(100% - 110px);
+    width: 100%;
+    padding: 10px;
+    background: rgba(coral, 0.2);
+    overflow-y: scroll;
+}
+
 .active-rooms {
     @include position(absolute, 0 auto auto $room-list-width);
     width: calc(100% - #{$room-list-width});

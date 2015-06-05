@@ -11,7 +11,7 @@ import ActionCreators from '../actions/ActionCreator';
 //==============================================================================
 // Private data structures
 //==============================================================================
-// Keeps track which is the active room!
+// Keeps track of which is the currently active room!
 var _activeRoomId;
 // Private data structure holding all views.
 var _rooms = Immutable.Map();
@@ -29,11 +29,14 @@ let RoomsStore = Reflux.createStore({
     },
     onOpenRoom: function(room) {
         logger.log("RoomsStore:onOpenRoom", "called...roomId", room);
+        // If a active room is set, we change it's active status to false!
         if (_activeRoomId) {
             var activeRoomObj = _rooms.get(_activeRoomId);
             activeRoomObj = activeRoomObj.set("isActive", false);
             _rooms = _rooms.set(_activeRoomId, activeRoomObj);
         }
+        // For the room going to be opened, we set the `isMember` and `isActive`
+        // status to `true`.
         var roomId = room.get("id");
         var roomObj = _rooms.get(roomId);
         logger.log("RoomsStore:onOpenRoom", "roomObj", roomObj);

@@ -4,7 +4,7 @@
 import React from 'react/addons';
 import Reflux from 'reflux';
 import logger from 'bragi-browser';
-import { RouteHandler, Link, Navigation } from 'react-router';
+import { RouteHandler, Link } from 'react-router';
 import Immutable from 'immutable';
 //==============================================================================
 // Internal dependencies
@@ -21,9 +21,6 @@ let RoomDetail = React.createClass({
     router: React.PropTypes.func
   },
   mixins: [
-    // Injects react-routers Navigation mixin, to be able to transition between
-    // other routes. 
-    Navigation, 
     // Connect to the Room store and pick the object for the passed in room.
     Reflux.connectFilter(RoomsStore, "room", function(rooms) {
       logger.log("RoomDetail:connectFilter", "callled...props", this.props.params.roomSlug);
@@ -50,7 +47,7 @@ let RoomDetail = React.createClass({
       // the list view
       logger.log("RoomDetail:render", "Not found the room");
       view = "room not found"
-      this.transitionTo('/list/popular');
+      this.context.router.transitionTo('/list/popular');
 
     }
     return  (<div className="active-rooms">      

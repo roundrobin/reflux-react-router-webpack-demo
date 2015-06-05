@@ -27721,7 +27721,7 @@
 	    contextTypes: {
 	        router: _reactAddons2['default'].PropTypes.func
 	    },
-	    mixins: [_reactRouter.Navigation, _reflux2['default'].connect(_storesRoomsStoreJs2['default'], 'rooms')],
+	    mixins: [_reflux2['default'].connect(_storesRoomsStoreJs2['default'], 'rooms')],
 	    componentDidMount: function componentDidMount() {
 	        _bragiBrowser2['default'].log('RoomListMaster:componentDidMount', 'props', this.props);
 	    },
@@ -27736,7 +27736,7 @@
 	    },
 	    _onRoomOpen: function _onRoomOpen(room) {
 	        _actionsActionCreatorJs2['default'].openRoom(room);
-	        this.transitionTo('/room/' + room.get('id'));
+	        this.context.router.transitionTo('/room/' + room.get('id'));
 	    },
 	    render: function render() {
 	        var self = this;
@@ -29361,7 +29361,7 @@
 	//==============================================================================
 	// Private data structures
 	//==============================================================================
-	// Keeps track which is the active room!
+	// Keeps track of which is the currently active room!
 	var _activeRoomId;
 	// Private data structure holding all views.
 	var _rooms = _immutable2['default'].Map();
@@ -29379,11 +29379,14 @@
 	    },
 	    onOpenRoom: function onOpenRoom(room) {
 	        _bragiBrowser2['default'].log('RoomsStore:onOpenRoom', 'called...roomId', room);
+	        // If a active room is set, we change it's active status to false!
 	        if (_activeRoomId) {
 	            var activeRoomObj = _rooms.get(_activeRoomId);
 	            activeRoomObj = activeRoomObj.set('isActive', false);
 	            _rooms = _rooms.set(_activeRoomId, activeRoomObj);
 	        }
+	        // For the room going to be opened, we set the `isMember` and `isActive`
+	        // status to `true`.
 	        var roomId = room.get('id');
 	        var roomObj = _rooms.get(roomId);
 	        _bragiBrowser2['default'].log('RoomsStore:onOpenRoom', 'roomObj', roomObj);
@@ -29519,9 +29522,6 @@
 	    router: _reactAddons2['default'].PropTypes.func
 	  },
 	  mixins: [
-	  // Injects react-routers Navigation mixin, to be able to transition between
-	  // other routes.
-	  _reactRouter.Navigation,
 	  // Connect to the Room store and pick the object for the passed in room.
 	  _reflux2['default'].connectFilter(_storesRoomsStoreJs2['default'], 'room', function (rooms) {
 	    _bragiBrowser2['default'].log('RoomDetail:connectFilter', 'callled...props', this.props.params.roomSlug);
@@ -29557,7 +29557,7 @@
 	      // the list view
 	      _bragiBrowser2['default'].log('RoomDetail:render', 'Not found the room');
 	      view = 'room not found';
-	      this.transitionTo('/list/popular');
+	      this.context.router.transitionTo('/list/popular');
 	    }
 	    return _reactAddons2['default'].createElement(
 	      'div',
@@ -29624,7 +29624,7 @@
 	  contextTypes: {
 	    router: _reactAddons2['default'].PropTypes.func
 	  },
-	  mixins: [_reactRouter.Navigation, _reflux2['default'].connectFilter(_storesMembersStore2['default'], 'members', function (state) {
+	  mixins: [_reflux2['default'].connectFilter(_storesMembersStore2['default'], 'members', function (state) {
 	    var membersObj = state.get(this.props.roomId + '');
 	    var returnObj = _immutable2['default'].Map();
 	    if (membersObj && membersObj.get('members')) {
@@ -41941,7 +41941,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-	  value: true
+	    value: true
 	});
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -41980,71 +41980,113 @@
 	// Module definition
 	//==============================================================================
 	var ChatWindow = _reactAddons2['default'].createClass({
-	  displayName: 'ChatWindow',
+	    displayName: 'ChatWindow',
 
-	  mixins: [_reactRouter.Navigation],
-	  getInitialState: function getInitialState() {
-	    return { text: '' };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    _bragiBrowser2['default'].log('ChatWindow:componentDidMount', 'props', this.props);
-	  },
-	  _clickSend: function _clickSend() {
-	    _bragiBrowser2['default'].log('ChatWindow:_clickSend', 'called...');
-	    alert('send message');
-	  },
-	  _handleChange: function _handleChange(event) {
-	    _bragiBrowser2['default'].log('ChatWindow:_onChange', 'called...', event);
-	    this.setState({ value: event.text.value });
-	  },
-	  _onKeyDown: function _onKeyDown(event) {
-	    _bragiBrowser2['default'].log('ChatWindow:_onKeyDown', 'called...', event);
-	    if (event.keyCode === ENTER_KEY_CODE) {
-	      event.preventDefault();
-	      var text = this.state.text.trim();
-	      if (text) {
-	        _actionsActionCreatorJs2['default'].addMessage(msg, this.props.roomId);
-	        _bragiBrowser2['default'].log('ChatWindow:_onKeyDown', 'Enter key hit!');
-	      }
-	      this.setState({ text: '' });
+	    contextTypes: {
+	        router: _reactAddons2['default'].PropTypes.func
+	    },
+	    getInitialState: function getInitialState() {
+	        return {
+	            text: '',
+	            messages: {
+	                1: {
+	                    text: 'Hello, welcome to the room!',
+	                    date: +new Date()
+	                } }
+	        };
+	    },
+	    componentDidMount: function componentDidMount() {
+	        _bragiBrowser2['default'].log('ChatWindow:componentDidMount', 'props', this.props);
+	    },
+	    _clickSend: function _clickSend() {
+	        _bragiBrowser2['default'].log('ChatWindow:_clickSend', 'called...');
+	        //alert(`send message: ${this.state.text}`);
+	        this._addMessage(this.state.text.trim());
+	    },
+	    _handleChange: function _handleChange(event) {
+	        _bragiBrowser2['default'].log('ChatWindow:_onChange', 'called...', event);
+	        this.setState({
+	            text: event.target.value
+	        });
+	    },
+	    _addMessage: function _addMessage(text) {
+	        var id = Math.floor(Math.random() * 100000);
+	        var messages = this.state.messages;
+	        messages[id] = {
+	            text: text,
+	            date: +new Date()
+	        };
+	        this.setState({
+	            messages: messages,
+	            text: ''
+	        });
+	    },
+	    _onKeyDown: function _onKeyDown(event) {
+	        _bragiBrowser2['default'].log('ChatWindow:_onKeyDown', 'called...', event);
+	        if (event.keyCode === ENTER_KEY_CODE) {
+	            event.preventDefault();
+	            var text = this.state.text.trim();
+	            if (text) {
+	                this._addMessage(text);
+	                //ActionCreator.addMessage(msg, this.props.roomId);
+	                _bragiBrowser2['default'].log('ChatWindow:_onKeyDown', 'Enter key hit!');
+	            }
+	        }
+	    },
+	    render: function render() {
+	        var self = this;
+	        _bragiBrowser2['default'].log('ChatWindow:render', 'state', this.state);
+	        var messages = Object.keys(this.state.messages).sort(function (idFirst, idSecond) {
+	            var objA = self.state.messages[idFirst];
+	            var objB = self.state.messages[idSecond];
+	            return objA.date - objB.date;
+	        }).map(function (messageId, index) {
+	            var msg = self.state.messages[messageId];
+	            return _reactAddons2['default'].createElement(
+	                'div',
+	                null,
+	                '[',
+	                index,
+	                '] ',
+	                msg.text
+	            );
+	        });
+	        return _reactAddons2['default'].createElement(
+	            'div',
+	            { className: 'chat-window' },
+	            _reactAddons2['default'].createElement(
+	                'h2',
+	                null,
+	                'Chat window'
+	            ),
+	            _reactAddons2['default'].createElement(
+	                'header',
+	                null,
+	                this.props.children
+	            ),
+	            _reactAddons2['default'].createElement(
+	                'div',
+	                { className: 'messages-thread' },
+	                messages
+	            ),
+	            _reactAddons2['default'].createElement(
+	                'div',
+	                { className: 'chat-window__reply-box' },
+	                _reactAddons2['default'].createElement('input', { className: 'chat-window__input',
+	                    type: 'text',
+	                    onKeyDown: this._onKeyDown,
+	                    onChange: this._handleChange,
+	                    value: this.state.text,
+	                    placeholder: 'Type chat message here' }),
+	                _reactAddons2['default'].createElement(
+	                    'div',
+	                    { className: 'chat-window__send', onClick: this._clickSend },
+	                    'Send'
+	                )
+	            )
+	        );
 	    }
-	  },
-	  render: function render() {
-	    var self = this;
-	    _bragiBrowser2['default'].log('ChatWindow:render', 'state', this.state);
-
-	    return _reactAddons2['default'].createElement(
-	      'div',
-	      { className: 'chat-window' },
-	      _reactAddons2['default'].createElement(
-	        'h2',
-	        null,
-	        'Chat window'
-	      ),
-	      _reactAddons2['default'].createElement(
-	        'header',
-	        null,
-	        this.props.children
-	      ),
-	      _reactAddons2['default'].createElement(
-	        'div',
-	        { className: 'chat-window__reply-box' },
-	        _reactAddons2['default'].createElement('input', { className: 'chat-window__input',
-	          type: 'text',
-	          onKeyDown: this._onKeyDown,
-	          onChange: this._handleChange,
-	          value: this.state.text,
-	          placeholder: 'Type chat message here' }),
-	        _reactAddons2['default'].createElement(
-	          'div',
-	          { className: 'chat-window__send', onClick: this._clickSend },
-	          'Send'
-	        )
-	      )
-	    );
-	  }
 	});
-
 	exports['default'] = ChatWindow;
 	module.exports = exports['default'];
 

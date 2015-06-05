@@ -5,7 +5,7 @@ import React from 'react/addons';
 import Reflux from 'reflux';
 import logger from 'bragi-browser';
 import _ from 'lodash';
-import { RouteHandler, Link, Navigation } from 'react-router';
+import { RouteHandler, Link } from 'react-router';
 import Immutable from 'immutable';
 //==============================================================================
 // Internal dependencies
@@ -19,7 +19,7 @@ let MembersList = React.createClass({
   contextTypes: {
     router: React.PropTypes.func
   },
-  mixins: [Navigation, Reflux.connectFilter(MembersStore, "members", function(state) {
+  mixins: [Reflux.connectFilter(MembersStore, "members", function(state) {
         let membersObj = state.get(this.props.roomId+"");
         let returnObj = Immutable.Map();
         if(membersObj && membersObj.get("members")){
