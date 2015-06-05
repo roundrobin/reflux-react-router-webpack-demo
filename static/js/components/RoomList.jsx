@@ -18,7 +18,7 @@ let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 // Module definition
 //==============================================================================
 let RoomList = React.createClass({
-  shouldComponentUpdate: function(nextProps, nextState){
+  shouldComponentUpdate(nextProps, nextState){
     return !Immutable.is(nextProps.rooms, this.props.rooms);
   }, 
   render() {

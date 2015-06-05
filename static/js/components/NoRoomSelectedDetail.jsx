@@ -17,7 +17,7 @@ let NoRoomSelectedDetail = React.createClass({
     logger.log("NoRoomSelectedDetail:componentDidMount", "props", this.props);
 
   },
-  _openRoom: function(){
+  _openRoom(){
     logger.log("", '↪ Called');
       
   },

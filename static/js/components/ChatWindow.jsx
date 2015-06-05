@@ -28,7 +28,7 @@ let ChatWindow = React.createClass({
     contextTypes: {
         router: React.PropTypes.func
     },
-    getInitialState: function() {
+    getInitialState() {
         return {
             text: "",
             messages: {
@@ -43,17 +43,17 @@ let ChatWindow = React.createClass({
     componentDidMount() {
         logger.log("ChatWindow:componentDidMount", "props", this.props);
     },
-    _clickSend: function() {
+    _clickSend() {
         logger.log("ChatWindow:_clickSend", "called...");
         this._addMessage(this.state.text.trim());
     },
-    _handleChange: function(event) {
+    _handleChange(event) {
         logger.log("ChatWindow:_onChange", "called...", event);
         this.setState({
             text: event.target.value
         });
     },
-    _addMessage: function(text) {
+    _addMessage(text) {
         logger.log("ChatWindow:_onChange", "called...text", text);
         var id = Math.floor(Math.random() * 100000);
         var messages = this.state.messages;
@@ -73,7 +73,7 @@ let ChatWindow = React.createClass({
             messageThreadNode.scrollTop = scrollHeight;
         });
     },
-    _onKeyDown: function(event) {
+    _onKeyDown(event) {
         logger.log("ChatWindow:_onKeyDown", "called...", event);
         if (event.keyCode === ENTER_KEY_CODE) {
             event.preventDefault();

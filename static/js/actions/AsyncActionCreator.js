@@ -1,4 +1,3 @@
-'use strict';
 //==============================================================================
 // External dependencies
 //==============================================================================
@@ -22,14 +21,13 @@ let Actions = Reflux.createActions({
 //==============================================================================
 // Action listenerns
 //==============================================================================
-// when 'load' is triggered, call async operation and trigger related actions
 Actions.loadRooms.listen( function() {
 
 	logger.log("AsyncActionCreators:loadRooms", "called...", WebAPIUtils);
-    // By default, the listener is bound to the action
-    // so we can access child actions using 'this'
+    // Fires of a Ajax call to an open Github endpoint, to test how Ajax calls
+    // are integrated within React/Flux.
     var promise = WebAPIUtils.getProfile();
-    // After initializing the Ajax promise, we hook it up to some callback.
+    // After initializing the Ajax promise, we hook it up to some callbacks.
     promise
         .done( this.completed )
         .fail( this.failed );

@@ -25,7 +25,7 @@ let RoomListMaster = React.createClass({
     componentDidMount() {
         logger.log("RoomListMaster:componentDidMount", "props", this.props);
     },
-    _clickAddRoomsBtn: function() {
+    _clickAddRoomsBtn() {
         logger.log("RoomListMaster:_clickAddRoomsBtn", "called");
         let id = Math.floor(Math.random() * 10000)+"";
         let newRoom = Immutable.Map({
@@ -34,7 +34,7 @@ let RoomListMaster = React.createClass({
         });
         ActionCreators.addRoom(newRoom);
     },
-    _onRoomOpen: function(room){
+    _onRoomOpen(room){
         ActionCreators.openRoom(room);
         this.context.router.transitionTo('/room/' + room.get("id"));
             

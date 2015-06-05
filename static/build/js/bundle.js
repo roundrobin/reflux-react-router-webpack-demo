@@ -42177,13 +42177,12 @@
 /* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 	//==============================================================================
 	// External dependencies
 	//==============================================================================
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var _reflux = __webpack_require__(231);
 
@@ -42215,14 +42214,13 @@
 	//==============================================================================
 	// Action listenerns
 	//==============================================================================
-	// when 'load' is triggered, call async operation and trigger related actions
 	Actions.loadRooms.listen(function () {
 
 	    _bragiBrowser2['default'].log('AsyncActionCreators:loadRooms', 'called...', _utilsWebAPIUtilsJs2['default']);
-	    // By default, the listener is bound to the action
-	    // so we can access child actions using 'this'
+	    // Fires of a Ajax call to an open Github endpoint, to test how Ajax calls
+	    // are integrated within React/Flux.
 	    var promise = _utilsWebAPIUtilsJs2['default'].getProfile();
-	    // After initializing the Ajax promise, we hook it up to some callback.
+	    // After initializing the Ajax promise, we hook it up to some callbacks.
 	    promise.done(this.completed).fail(this.failed);
 	});
 
