@@ -31,11 +31,12 @@ purpose of the demo, we implement a chat room store,  which holds the data of al
 all active rooms. Based on that data we implement a couple of views visualizing lists and chat rooms.
 
 ##Features of the demo
-* Flux implementation via Flux
+* Flux implementation via Reflux
 * Master/Detail view via React-Router
 * CSS animations via React's CSSTransitionGroup.
 * Canonical URLs via React-Router
 * Application logging via Bragi
+* Usage ofE7 features via Bable
 * Data structures with Immutable.js
 * Uses BEM as CSS naming conventation
 
