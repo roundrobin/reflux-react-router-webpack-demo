@@ -41976,7 +41976,6 @@
 	// Constants / Configs
 	//==============================================================================
 	var ENTER_KEY_CODE = 13;
-
 	var exampleUser = {
 	    id: 1,
 	    name: 'roundrobin'
@@ -42007,7 +42006,6 @@
 	    },
 	    _clickSend: function _clickSend() {
 	        _bragiBrowser2['default'].log('ChatWindow:_clickSend', 'called...');
-	        //alert(`send message: ${this.state.text}`);
 	        this._addMessage(this.state.text.trim());
 	    },
 	    _handleChange: function _handleChange(event) {
@@ -42017,6 +42015,7 @@
 	        });
 	    },
 	    _addMessage: function _addMessage(text) {
+	        _bragiBrowser2['default'].log('ChatWindow:_onChange', 'called...text', text);
 	        var id = Math.floor(Math.random() * 100000);
 	        var messages = this.state.messages;
 	        messages[id] = {
@@ -42028,7 +42027,7 @@
 	            messages: messages,
 	            text: ''
 	        }, function () {
-	            // Afte we added a new message to the state object, we want to make
+	            // After the new message got added to the messages object, we want to make
 	            // sure the message thread DIV is scrolled to the bottom.
 	            var messageThreadNode = this.refs.messagesThread.getDOMNode();
 	            var scrollHeight = messageThreadNode.scrollHeight;
@@ -42048,8 +42047,9 @@
 	        }
 	    },
 	    render: function render() {
-	        var self = this;
 	        _bragiBrowser2['default'].log('ChatWindow:render', 'state', this.state);
+	        var self = this;
+	        //Creates the messages views to the messages container
 	        var messages = Object.keys(this.state.messages).sort(function (idFirst, idSecond) {
 	            var objA = self.state.messages[idFirst];
 	            var objB = self.state.messages[idSecond];

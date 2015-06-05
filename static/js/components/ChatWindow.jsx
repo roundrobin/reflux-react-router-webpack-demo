@@ -4,7 +4,10 @@
 import React from 'react/addons';
 import Reflux from 'reflux';
 import logger from 'bragi-browser';
-import { RouteHandler, Link} from 'react-router';
+import {
+    RouteHandler, Link
+}
+from 'react-router';
 //==============================================================================
 // Internal dependencies
 //==============================================================================
@@ -14,10 +17,9 @@ import ChatMessagesStore from '../stores/ChatMessagesStore.js';
 // Constants / Configs
 //==============================================================================
 const ENTER_KEY_CODE = 13;
-
 let exampleUser = {
-  id: 1,
-  name: "roundrobin"
+    id: 1,
+    name: "roundrobin"
 };
 //==============================================================================
 // Module definition
@@ -43,7 +45,6 @@ let ChatWindow = React.createClass({
     },
     _clickSend: function() {
         logger.log("ChatWindow:_clickSend", "called...");
-        //alert(`send message: ${this.state.text}`);
         this._addMessage(this.state.text.trim());
     },
     _handleChange: function(event) {
@@ -53,6 +54,7 @@ let ChatWindow = React.createClass({
         });
     },
     _addMessage: function(text) {
+        logger.log("ChatWindow:_onChange", "called...text", text);
         var id = Math.floor(Math.random() * 100000);
         var messages = this.state.messages;
         messages[id] = {
@@ -63,8 +65,8 @@ let ChatWindow = React.createClass({
         this.setState({
             messages: messages,
             text: ''
-        }, function(){
-            // Afte we added a new message to the state object, we want to make
+        }, function() {
+            // After the new message got added to the messages object, we want to make
             // sure the message thread DIV is scrolled to the bottom.
             var messageThreadNode = this.refs.messagesThread.getDOMNode();
             var scrollHeight = messageThreadNode.scrollHeight;
@@ -84,8 +86,9 @@ let ChatWindow = React.createClass({
         }
     },
     render() {
-        var self = this;
         logger.log("ChatWindow:render", "state", this.state);
+        var self = this;
+        //Creates the messages views to the messages container
         var messages = Object.keys(this.state.messages)
             .sort(function(idFirst, idSecond) {
                 var objA = self.state.messages[idFirst];

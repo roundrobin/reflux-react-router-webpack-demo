@@ -37,6 +37,7 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 * Canonical URLs via React-Router
 * Application logging via Bragi
 * Data structures with Immutable.js
+* Uses BEM as CSS naming conventation
 
 ## Advantages Reflux
 * Small code base (~13kb)
