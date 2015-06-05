@@ -29624,14 +29624,14 @@
 	      returnObj = membersObj.get('members');
 	    }
 
-	    _bragiBrowser2['default'].log('MembersList:connectFilter', 'props: %o members: %o ', this.props.roomId, returnObj);
+	    _bragiBrowser2['default'].log('MembersList:connectFilter', 'props: %o members: %o ', this.props.roomId, returnObj.toJS());
 	    return returnObj;
 	  })],
 	  render: function render() {
 	    var self = this;
 	    _bragiBrowser2['default'].log('MembersList:render', 'state', self.state);
 
-	    var members = undefined;
+	    var members;
 	    if (self.state.members) {
 
 	      members = self.state.members.map(function (member, key) {
@@ -29657,11 +29657,7 @@
 	      _reactAddons2['default'].createElement(
 	        'div',
 	        { className: 'members-area' },
-	        _reactAddons2['default'].createElement(
-	          ReactCSSTransitionGroup,
-	          { transitionName: 'members', className: 'members-list-animated' },
-	          members
-	        )
+	        members
 	      )
 	    );
 	  }
@@ -51422,7 +51418,7 @@
 	            _members = _members.set(room.get('id'), _immutable2['default'].Map({
 	                members: _immutable2['default'].Map({
 	                    '1': _immutable2['default'].Map({
-	                        name: 'Mr. Radish ' + randId,
+	                        name: 'Room Host ' + randId,
 	                        id: '1'
 	                    })
 	                })
@@ -51465,7 +51461,10 @@
 	            // Set the new user infos for the passed in room!
 	            members = members.set(user.get('id'), user);
 	            // Set the new members map
-	            _members = _members.setIn([roomId, 'members'], members);
+	            //_members = _members.setIn([roomId, "members"], members);
+	            var membersArr = _members.get(roomId).set('members', members);
+	            _members = _members.set(roomId, membersArr);
+
 	            //Inform all the views and other stores that the data changed!
 	            this.trigger(this.getAllMembers());
 	        }
@@ -56451,10 +56450,6 @@
 	//==============================================================================
 	// Internal dependencies
 	//==============================================================================
-
-	var _actionsActionCreatorJs = __webpack_require__(255);
-
-	var _actionsActionCreatorJs2 = _interopRequireDefault(_actionsActionCreatorJs);
 
 	//==============================================================================
 	// Configs

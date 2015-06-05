@@ -43,7 +43,7 @@ let MembersStore = Reflux.createStore({
             _members = _members.set(room.get("id"), Immutable.Map({
                 members: Immutable.Map({
                     "1": Immutable.Map({
-                        name: `Mr. Radish ${randId}`,
+                        name: `Room Host ${randId}`,
                         id: "1"
                     })
                 })
@@ -86,7 +86,10 @@ let MembersStore = Reflux.createStore({
             // Set the new user infos for the passed in room!
             members = members.set(user.get("id"), user)
                 // Set the new members map
-            _members = _members.setIn([roomId, "members"], members);
+            //_members = _members.setIn([roomId, "members"], members);
+            var membersArr = _members.get(roomId).set("members", members)
+            _members = _members.set(roomId, membersArr);
+
             //Inform all the views and other stores that the data changed!
             this.trigger(this.getAllMembers());
         }

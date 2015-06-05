@@ -26,14 +26,14 @@ let MembersList = React.createClass({
           returnObj = membersObj.get("members");
         }
 
-        logger.log("MembersList:connectFilter", "props: %o members: %o ", this.props.roomId, returnObj);
+        logger.log("MembersList:connectFilter", "props: %o members: %o ", this.props.roomId, returnObj.toJS());
         return returnObj;
     })],
   render() {
     let self = this;
     logger.log("MembersList:render", "state",self.state);
 
-    let members;
+    var members;
     if(self.state.members){
 
       members = self.state.members.map(function(member, key){
@@ -45,9 +45,7 @@ let MembersList = React.createClass({
     return (<div className="members-list">
           <h2>Friendlist for room: {this.props.roomId}</h2>
           <div className="members-area">
-              <ReactCSSTransitionGroup transitionName="members" className="members-list-animated">
-                {members}
-              </ReactCSSTransitionGroup>            
+              {members}              
           </div>
       </div>);
     }

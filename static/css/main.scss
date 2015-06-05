@@ -176,7 +176,6 @@ body {
     opacity: 1;
 }
 
-
 .members-enter {
     @include transition(opacity 0.3s);
     opacity: 0;
