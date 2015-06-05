@@ -13,7 +13,12 @@ import ChatMessagesStore from '../stores/ChatMessagesStore.js';
 //==============================================================================
 // Constants / Configs
 //==============================================================================
-let ENTER_KEY_CODE = 13;
+const ENTER_KEY_CODE = 13;
+
+let exampleUser = {
+  id: 1,
+  name: "roundrobin"
+};
 //==============================================================================
 // Module definition
 //==============================================================================
@@ -27,8 +32,9 @@ let ChatWindow = React.createClass({
             messages: {
                 1: {
                     text: "Hello, welcome to the room!",
-                    date: +new Date()
-                },
+                    date: +new Date(),
+                    user: exampleUser
+                }
             }
         }
     },
@@ -51,11 +57,18 @@ let ChatWindow = React.createClass({
         var messages = this.state.messages;
         messages[id] = {
             text: text,
-            date: +new Date()
+            date: +new Date(),
+            user: exampleUser
         };
         this.setState({
             messages: messages,
             text: ''
+        }, function(){
+            // Afte we added a new message to the state object, we want to make
+            // sure the message thread DIV is scrolled to the bottom.
+            var messageThreadNode = this.refs.messagesThread.getDOMNode();
+            var scrollHeight = messageThreadNode.scrollHeight;
+            messageThreadNode.scrollTop = scrollHeight;
         });
     },
     _onKeyDown: function(event) {
@@ -81,12 +94,12 @@ let ChatWindow = React.createClass({
             })
             .map(function(messageId, index) {
                 var msg = self.state.messages[messageId];
-                return <div>[{index}] {msg.text}</div>
+                return <div>[{index}] <b>{msg.user.name}:</b> {msg.text}</div>
             });
         return (<div className="chat-window">
           <h2>Chat window</h2>
           <header>{this.props.children}</header>  
-          <div className={"messages-thread"}>{messages}</div>  
+          <div className={"messages-thread"} ref="messagesThread">{messages}</div>  
           <div className="chat-window__reply-box">
             <input className="chat-window__input" 
                    type="text" 

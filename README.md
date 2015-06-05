@@ -24,9 +24,9 @@ $ npm run dev
 
 Then go to `http://localhost:8124` in your browser
 
-## App
+## Demo: Single page application (SPA)
 
-This demo app shows how stores and actions in Flux work in conjunction with the react-router component. For the
+This demo SPA shows how stores and actions in Flux work in conjunction with the react-router component. For the
 purpose of the demo, we implement a chat room store,  which holds the data of all rooms and a list of
 all active rooms. Based on that data we implement a couple of views visualizing lists and chat rooms.
 
@@ -57,6 +57,7 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 
 * [Reflux Documentation](https://github.com/spoike/refluxjs)
 * [Article: Reflux](http://henleyedition.com/building-an-app-using-react-and-refluxjs/)
+* [Article: Introdction to contexts](https://www.tildedave.com/2014/11/15/introduction-to-contexts-in-react-js.html)
 
 ## Feedback
 

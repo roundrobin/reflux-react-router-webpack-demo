@@ -41976,6 +41976,11 @@
 	// Constants / Configs
 	//==============================================================================
 	var ENTER_KEY_CODE = 13;
+
+	var exampleUser = {
+	    id: 1,
+	    name: 'roundrobin'
+	};
 	//==============================================================================
 	// Module definition
 	//==============================================================================
@@ -41991,8 +41996,10 @@
 	            messages: {
 	                1: {
 	                    text: 'Hello, welcome to the room!',
-	                    date: +new Date()
-	                } }
+	                    date: +new Date(),
+	                    user: exampleUser
+	                }
+	            }
 	        };
 	    },
 	    componentDidMount: function componentDidMount() {
@@ -42014,11 +42021,18 @@
 	        var messages = this.state.messages;
 	        messages[id] = {
 	            text: text,
-	            date: +new Date()
+	            date: +new Date(),
+	            user: exampleUser
 	        };
 	        this.setState({
 	            messages: messages,
 	            text: ''
+	        }, function () {
+	            // Afte we added a new message to the state object, we want to make
+	            // sure the message thread DIV is scrolled to the bottom.
+	            var messageThreadNode = this.refs.messagesThread.getDOMNode();
+	            var scrollHeight = messageThreadNode.scrollHeight;
+	            messageThreadNode.scrollTop = scrollHeight;
 	        });
 	    },
 	    _onKeyDown: function _onKeyDown(event) {
@@ -42048,6 +42062,13 @@
 	                '[',
 	                index,
 	                '] ',
+	                _reactAddons2['default'].createElement(
+	                    'b',
+	                    null,
+	                    msg.user.name,
+	                    ':'
+	                ),
+	                ' ',
 	                msg.text
 	            );
 	        });
@@ -42066,7 +42087,7 @@
 	            ),
 	            _reactAddons2['default'].createElement(
 	                'div',
-	                { className: 'messages-thread' },
+	                { className: 'messages-thread', ref: 'messagesThread' },
 	                messages
 	            ),
 	            _reactAddons2['default'].createElement(
