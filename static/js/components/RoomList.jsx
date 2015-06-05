@@ -41,7 +41,7 @@ let RoomList = React.createClass({
         });
 
     return  (<div className={"room-list-wrapper"}>          
-          <ReactCSSTransitionGroup transitionName="room" className="animated-list">
+          <ReactCSSTransitionGroup transitionName="room" className="room-list__animated-list">
             {roomsList}
           </ReactCSSTransitionGroup>
       </div>);

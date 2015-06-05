@@ -26,19 +26,20 @@
 //
 @import "base/layout";
 
+//------------------------------------------------------------------------------
+// Variables
+//------------------------------------------------------------------------------
 $header-height: 65px;
 $room-list-width: 300px;
 
+//------------------------------------------------------------------------------
+// Layout: Main layout classes
+//------------------------------------------------------------------------------
 body {
     background: white;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-}
-
-.btn {
-    padding: 10px;
-    @include user-select(none);
 }
 
 .top-header {
@@ -58,25 +59,11 @@ body {
     padding: 10px;
 }
 
-.room-list {
-    @include position(absolute, 0 auto auto 0);
-    width: $room-list-width;
-    height: calc(100vh - #{$header-height});
-    background: rgba(gray, 0.3);
-    padding: 10px;
-    overflow-y: scroll;
-}
+//------------------------------------------------------------------------------
+// Block: messages-thread
+//------------------------------------------------------------------------------
 
-.animated-list {
-    &:empty {
-        &:after {
-            content: "No chat rooms created. Click button above";
-            color: rgba(black, 0.3);
-        }
-    }
-}
-
-.messages-thread{
+.messages-thread {
     @include position(absolute, 60px 0 0 0);
     height: calc(100% - 110px);
     width: 100%;
@@ -84,6 +71,10 @@ body {
     background: rgba(coral, 0.2);
     overflow-y: scroll;
 }
+
+//------------------------------------------------------------------------------
+// Block: active-rooms
+//------------------------------------------------------------------------------
 
 .active-rooms {
     @include position(absolute, 0 auto auto $room-list-width);
@@ -93,6 +84,9 @@ body {
     padding: 10px;
 }
 
+//------------------------------------------------------------------------------
+// Block: members-list
+//------------------------------------------------------------------------------
 .members-list {
     @include position(absolute, 0 0 auto auto);
     width: $room-list-width;
@@ -101,18 +95,9 @@ body {
     padding: 10px;
 }
 
-.chat-window {
-    @include position(absolute, 0 auto auto 0);
-    width: calc(100% - #{$room-list-width});
-    height: calc(100vh - #{$header-height});
-    background: rgba(green, 0.1);
-    padding: 10px;
-}
-
-.chat-window__reply-box {
-    @include position(absolute, auto auto 0 0);
-    width: 100%;
-}
+//------------------------------------------------------------------------------
+// Block: members-area
+//------------------------------------------------------------------------------
 
 .members-area {
     &:empty {
@@ -121,6 +106,18 @@ body {
             color: rgba(black, 0.3);
         }
     }
+}
+
+//------------------------------------------------------------------------------
+// Block: chat-window
+//------------------------------------------------------------------------------
+
+.chat-window {
+    @include position(absolute, 0 auto auto 0);
+    width: calc(100% - #{$room-list-width});
+    height: calc(100vh - #{$header-height});
+    background: rgba(green, 0.1);
+    padding: 10px;
 }
 
 .chat-window__input {
@@ -148,6 +145,32 @@ body {
     }
 }
 
+.chat-window__reply-box {
+    @include position(absolute, auto auto 0 0);
+    width: 100%;
+}
+
+//------------------------------------------------------------------------------
+// Block: room-list
+//------------------------------------------------------------------------------
+.room-list {
+    @include position(absolute, 0 auto auto 0);
+    width: $room-list-width;
+    height: calc(100vh - #{$header-height});
+    background: rgba(gray, 0.3);
+    padding: 10px;
+    overflow-y: scroll;
+}
+
+.room-list__animated-list {
+    &:empty {
+        &:after {
+            content: "No chat rooms created. Click button above";
+            color: rgba(black, 0.3);
+        }
+    }
+}
+
 .room-list__item {
     background: rgba(gray, 0.5);
     padding: 10px;
@@ -165,13 +188,9 @@ body {
     }
 }
 
-.link {
-    margin-right: 20px;
-    &:hover {
-        color: yellow;
-    }
-}
-
+//------------------------------------------------------------------------------
+// Defines animation effect for: rooms in `RoomList` view
+//------------------------------------------------------------------------------
 .room-enter {
     @include transition(opacity 0.3s);
     opacity: 0;
@@ -185,6 +204,9 @@ body {
     opacity: 1;
 }
 
+//------------------------------------------------------------------------------
+// Defines animation effect for: members in `MembersList` view
+//------------------------------------------------------------------------------
 .members-enter {
     @include transition(opacity 0.3s);
     opacity: 0;
@@ -198,6 +220,16 @@ body {
     opacity: 1;
 }
 
+//------------------------------------------------------------------------------
+// Utility classes
+//------------------------------------------------------------------------------
+.link {
+    margin-right: 20px;
+    &:hover {
+        color: yellow;
+    }
+}
+
 h1.u-inline {
     margin: 0px;
     margin-right: 20px;
@@ -205,4 +237,9 @@ h1.u-inline {
 
 .u-inline {
     display: inline-block;
+}
+
+.btn {
+    padding: 10px;
+    @include user-select(none);
 }

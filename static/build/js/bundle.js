@@ -56605,7 +56605,7 @@
 	            { className: 'room-list-wrapper' },
 	            _reactAddons2['default'].createElement(
 	                ReactCSSTransitionGroup,
-	                { transitionName: 'room', className: 'animated-list' },
+	                { transitionName: 'room', className: 'room-list__animated-list' },
 	                roomsList
 	            )
 	        );

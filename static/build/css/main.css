@@ -378,13 +378,6 @@ body {
   height: 100vh;
   overflow: hidden; }
 
-.btn {
-  padding: 10px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; }
-
 .top-header {
   background: rgba(0, 0, 0, 0.5);
   height: 65px;
@@ -402,22 +395,6 @@ body {
 
 .home-view {
   padding: 10px; }
-
-.room-list {
-  position: absolute;
-  top: 0;
-  right: auto;
-  bottom: auto;
-  left: 0;
-  width: 300px;
-  height: calc(100vh - 65px);
-  background: rgba(128, 128, 128, 0.3);
-  padding: 10px;
-  overflow-y: scroll; }
-
-.animated-list:empty:after {
-  content: "No chat rooms created. Click button above";
-  color: rgba(0, 0, 0, 0.3); }
 
 .messages-thread {
   position: absolute;
@@ -453,6 +430,10 @@ body {
   background: rgba(255, 127, 80, 0.1);
   padding: 10px; }
 
+.members-area:empty:after {
+  content: "No members in this room";
+  color: rgba(0, 0, 0, 0.3); }
+
 .chat-window {
   position: absolute;
   top: 0;
@@ -463,18 +444,6 @@ body {
   height: calc(100vh - 65px);
   background: rgba(0, 128, 0, 0.1);
   padding: 10px; }
-
-.chat-window__reply-box {
-  position: absolute;
-  top: auto;
-  right: auto;
-  bottom: 0;
-  left: 0;
-  width: 100%; }
-
-.members-area:empty:after {
-  content: "No members in this room";
-  color: rgba(0, 0, 0, 0.3); }
 
 .chat-window__input {
   width: 100%;
@@ -507,6 +476,30 @@ body {
   .chat-window__send:hover {
     background: #25a25a; }
 
+.chat-window__reply-box {
+  position: absolute;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 0;
+  width: 100%; }
+
+.room-list {
+  position: absolute;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  width: 300px;
+  height: calc(100vh - 65px);
+  background: rgba(128, 128, 128, 0.3);
+  padding: 10px;
+  overflow-y: scroll; }
+
+.room-list__animated-list:empty:after {
+  content: "No chat rooms created. Click button above";
+  color: rgba(0, 0, 0, 0.3); }
+
 .room-list__item {
   background: rgba(128, 128, 128, 0.5);
   padding: 10px;
@@ -519,11 +512,6 @@ body {
     border-left: 5px solid rgba(255, 0, 0, 0.5); }
   .room-list__item.room-list__item--active {
     background: rgba(0, 0, 255, 0.2); }
-
-.link {
-  margin-right: 20px; }
-  .link:hover {
-    color: yellow; }
 
 .room-enter {
   -webkit-transition: opacity 0.3s;
@@ -549,9 +537,21 @@ body {
 .members-enter-leave {
   opacity: 1; }
 
+.link {
+  margin-right: 20px; }
+  .link:hover {
+    color: yellow; }
+
 h1.u-inline {
   margin: 0px;
   margin-right: 20px; }
 
 .u-inline {
   display: inline-block; }
+
+.btn {
+  padding: 10px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
