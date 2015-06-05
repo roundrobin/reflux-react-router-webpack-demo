@@ -2,19 +2,13 @@
 // External dependencies
 //==============================================================================
 import React from 'react/addons';
-import Reflux from 'reflux';
 import logger from 'bragi-browser';
-import { RouteHandler, Link, Navigation } from 'react-router';
 import classNames from 'classnames';
-import _ from 'lodash';
 import Immutable from 'immutable';
 //==============================================================================
 // Internal dependencies
 //==============================================================================
 import ActionCreators from '../actions/ActionCreator.js';
-import RoomsStore from '../stores/RoomsStore.js';
-import MembersList from './MembersList.jsx';
-import ChatWindow from './ChatWindow.jsx';
 //==============================================================================
 // Configs
 //==============================================================================
@@ -26,7 +20,7 @@ let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 let RoomList = React.createClass({
   shouldComponentUpdate: function(nextProps, nextState){
     return !Immutable.is(nextProps.rooms, this.props.rooms);
-  },
+  }, 
   render() {
     logger.log("RoomList:render", "called...", this.props);
     let self = this;
@@ -41,7 +35,7 @@ let RoomList = React.createClass({
             return (<div className={classNameString} 
                 key={room.get("id")} 
                 title="open chat room"
-                onClick={self.props.onRoomCellClick.bind(null, room)}>
+                onClick={self.props.onRoomOpen.bind(null, room)}>
                 {room.get("title")}
             </div>);
         });

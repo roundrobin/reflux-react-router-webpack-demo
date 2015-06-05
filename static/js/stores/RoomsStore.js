@@ -1,4 +1,3 @@
-'use strict';
 //==============================================================================
 // External dependencies
 //==============================================================================
@@ -52,7 +51,15 @@ let RoomsStore = Reflux.createStore({
         _rooms = _rooms.set(roomMap.get("id"), roomMap);
         this.trigger(this.getAllRooms());
     },
+    getActiveRoom: function(){
+        logger.log("RoomsStore:getActiveRoom", "called...");
+        if(_activeRoomId){
+            return _rooms.get(_activeRoomId); 
+        }
+        return;        
+    },
     getAllRooms: function() {
+        logger.log("RoomsStore:getAllRooms", "called...");
         return _rooms;
     }
 });

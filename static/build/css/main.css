@@ -525,6 +525,18 @@ body {
 .room-enter-leave {
   opacity: 1; }
 
+.members-enter {
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+  opacity: 0; }
+
+.members-enter-active {
+  opacity: 1; }
+
+.members-enter-leave {
+  opacity: 1; }
+
 h1.u-inline {
   margin: 0px;
   margin-right: 20px; }

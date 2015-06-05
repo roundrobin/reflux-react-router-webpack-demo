@@ -3,10 +3,7 @@
 //==============================================================================
 import React from 'react/addons';
 import Reflux from 'reflux';
-import {
-    RouteHandler, Link, Navigation
-}
-from 'react-router';
+import { RouteHandler, Link, Navigation} from 'react-router';
 import logger from 'bragi-browser';
 import Immutable from 'immutable';
 //==============================================================================
@@ -14,7 +11,7 @@ import Immutable from 'immutable';
 //==============================================================================
 import RoomList from '../components/RoomList.jsx';
 import RoomsStore from '../stores/RoomsStore.js';
-import RoomActionCreators from '../actions/ActionCreator.js';
+import ActionCreators from '../actions/ActionCreator.js';
 //==============================================================================
 // Module definition
 //==============================================================================
@@ -31,18 +28,17 @@ let RoomListMaster = React.createClass({
     },
     _clickAddRoomsBtn: function() {
         logger.log("RoomListMaster:_clickAddRoomsBtn", "called");
-        let id = Math.floor(Math.random() * 10000);
+        let id = Math.floor(Math.random() * 10000)+"";
         let newRoom = Immutable.Map({
             "title": "room-" + id,
             "id": id+""
         });
-        RoomActionCreators.addRoom(newRoom);
+        ActionCreators.addRoom(newRoom);
     },
-    _openRoom: function(room) {
-        //Reponds to a click event on a room list item!
-        logger.log("RoomListMaster:_openRoom", "called...", room);
-        RoomActionCreators.openRoom(room);
+    _onRoomOpen: function(room){
+        ActionCreators.openRoom(room);
         this.transitionTo('/room/' + room.get("id"));
+            
     },
     render() {
         let self = this;
@@ -53,7 +49,7 @@ let RoomListMaster = React.createClass({
           <button className={"btn"} onClick={this._clickAddRoomsBtn}>Add random chat room</button>
           <br/>
           <br/>
-          <RoomList rooms={this.state.rooms} onRoomCellClick={self._openRoom}/>
+          <RoomList rooms={this.state.rooms} onRoomOpen={this._onRoomOpen}/>
         </div>
 
         <RouteHandler/>

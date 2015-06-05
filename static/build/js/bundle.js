@@ -27727,16 +27727,14 @@
 	    },
 	    _clickAddRoomsBtn: function _clickAddRoomsBtn() {
 	        _bragiBrowser2['default'].log('RoomListMaster:_clickAddRoomsBtn', 'called');
-	        var id = Math.floor(Math.random() * 10000);
+	        var id = Math.floor(Math.random() * 10000) + '';
 	        var newRoom = _immutable2['default'].Map({
 	            'title': 'room-' + id,
 	            'id': id + ''
 	        });
 	        _actionsActionCreatorJs2['default'].addRoom(newRoom);
 	    },
-	    _openRoom: function _openRoom(room) {
-	        //Reponds to a click event on a room list item!
-	        _bragiBrowser2['default'].log('RoomListMaster:_openRoom', 'called...', room);
+	    _onRoomOpen: function _onRoomOpen(room) {
 	        _actionsActionCreatorJs2['default'].openRoom(room);
 	        this.transitionTo('/room/' + room.get('id'));
 	    },
@@ -27757,7 +27755,7 @@
 	                ),
 	                _reactAddons2['default'].createElement('br', null),
 	                _reactAddons2['default'].createElement('br', null),
-	                _reactAddons2['default'].createElement(_componentsRoomListJsx2['default'], { rooms: this.state.rooms, onRoomCellClick: self._openRoom })
+	                _reactAddons2['default'].createElement(_componentsRoomListJsx2['default'], { rooms: this.state.rooms, onRoomOpen: this._onRoomOpen })
 	            ),
 	            _reactAddons2['default'].createElement(_reactRouter.RouteHandler, null)
 	        );
@@ -29333,13 +29331,12 @@
 /* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 	//==============================================================================
 	// External dependencies
 	//==============================================================================
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var _bragiBrowser = __webpack_require__(200);
 
@@ -29404,7 +29401,15 @@
 	        _rooms = _rooms.set(roomMap.get('id'), roomMap);
 	        this.trigger(this.getAllRooms());
 	    },
+	    getActiveRoom: function getActiveRoom() {
+	        _bragiBrowser2['default'].log('RoomsStore:getActiveRoom', 'called...');
+	        if (_activeRoomId) {
+	            return _rooms.get(_activeRoomId);
+	        }
+	        return;
+	    },
 	    getAllRooms: function getAllRooms() {
+	        _bragiBrowser2['default'].log('RoomsStore:getAllRooms', 'called...');
 	        return _rooms;
 	    }
 	});
@@ -29602,6 +29607,7 @@
 
 	var _storesMembersStore2 = _interopRequireDefault(_storesMembersStore);
 
+	var ReactCSSTransitionGroup = _reactAddons2['default'].addons.CSSTransitionGroup;
 	//==============================================================================
 	// Module definition
 	//==============================================================================
@@ -29621,28 +29627,24 @@
 	    _bragiBrowser2['default'].log('MembersList:connectFilter', 'props: %o members: %o ', this.props.roomId, returnObj);
 	    return returnObj;
 	  })],
-	  componentDidMount: function componentDidMount() {
-	    _bragiBrowser2['default'].log('MembersList:componentDidMount', 'props', this.props);
-	    var self = this;
-	  },
 	  render: function render() {
 	    var self = this;
 	    _bragiBrowser2['default'].log('MembersList:render', 'state', self.state);
-	    var members;
 
+	    var members = undefined;
 	    if (self.state.members) {
-	      var members = Object.keys(self.state.members.toObject()).map(function (memberId, index) {
-	        var member = self.state.members.get(memberId);
+
+	      members = self.state.members.map(function (member, key) {
+	        _bragiBrowser2['default'].log('MembersList:render:map', 'key', member.toJS(), key);
 	        return _reactAddons2['default'].createElement(
 	          'div',
-	          { key: index, className: 'members-area__item' },
+	          { key: member.get('id'), className: 'members-area__item' },
 	          member.get('name'),
 	          '-',
 	          member.get('id')
 	        );
 	      });
 	    }
-
 	    return _reactAddons2['default'].createElement(
 	      'div',
 	      { className: 'members-list' },
@@ -29655,7 +29657,11 @@
 	      _reactAddons2['default'].createElement(
 	        'div',
 	        { className: 'members-area' },
-	        members
+	        _reactAddons2['default'].createElement(
+	          ReactCSSTransitionGroup,
+	          { transitionName: 'members', className: 'members-list-animated' },
+	          members
+	        )
 	      )
 	    );
 	  }
@@ -51345,13 +51351,12 @@
 /* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 	//==============================================================================
 	// External dependencies
 	//==============================================================================
+	'use strict';
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 	var _bragiBrowser = __webpack_require__(200);
 
@@ -51373,6 +51378,10 @@
 	// Internal dependencies
 	//==============================================================================
 
+	var _RoomsStore = __webpack_require__(254);
+
+	var _RoomsStore2 = _interopRequireDefault(_RoomsStore);
+
 	var _actionsActionCreator = __webpack_require__(255);
 
 	var _actionsActionCreator2 = _interopRequireDefault(_actionsActionCreator);
@@ -51381,14 +51390,14 @@
 
 	var _actionsAsyncActionCreator2 = _interopRequireDefault(_actionsAsyncActionCreator);
 
-	function getRandomInt(min, max) {
-	    return Math.floor(Math.random() * (max - min + 1)) + min;
-	}
+	//==============================================================================
+	// Private data structure
+	//==============================================================================
+	var _members = _immutable2['default'].Map();
+	var _checkIntervals = [];
 	//==============================================================================
 	// Store definition
 	//==============================================================================
-	var _members = _immutable2['default'].Map();
-	var _idIndex = 0;
 	var MembersStore = _reflux2['default'].createStore({
 	    listenables: [_actionsAsyncActionCreator2['default'], _actionsActionCreator2['default']],
 	    init: function init() {
@@ -51406,49 +51415,71 @@
 	    },
 	    onOpenRoom: function onOpenRoom(room) {
 	        _bragiBrowser2['default'].log('MembersStore:onOpenRoom', 'called...', room);
+	        var self = this;
 	        if (!_members[room.get('id')]) {
 	            _bragiBrowser2['default'].log('MembersStore:onOpenRoom', 'Add new room to the object');
-
 	            var randId = Math.floor(Math.random() * 1000);
-	            _members = _members.set(room.get('id'), _immutable2['default'].Map({ members: _immutable2['default'].Map({
+	            _members = _members.set(room.get('id'), _immutable2['default'].Map({
+	                members: _immutable2['default'].Map({
 	                    '1': _immutable2['default'].Map({
 	                        name: 'Mr. Radish ' + randId,
 	                        id: '1'
 	                    })
-	                }) }));
+	                })
+	            }));
+	        }
+	        var activeRoom = _RoomsStore2['default'].getActiveRoom();
+	        // Check if there is currently an active room set
+	        if (activeRoom) {
+	            _bragiBrowser2['default'].log('MembersStore:onOpenRoom:activeRoom', 'found active room', activeRoom);
+	            // If the user had previously rooms open, we clear out all the setIntervals.
+	            _checkIntervals.forEach(function (intervalId) {
+	                _bragiBrowser2['default'].log('MembersStore:onOpenRoom:activeRoom', 'clear interval', intervalId);
+	                clearInterval(intervalId);
+	            });
+	            // For demo purposes we add or remove random users to the members during
+	            // a session in a room.
+	            var intervalId = setInterval(function () {
+	                // Choose randomly between 0 and 1, and either add or remove a member.
+	                if (Math.round(Math.random()) === 1) {
+	                    var id = Math.floor(Math.random() * 1000000) + '';
+	                    _bragiBrowser2['default'].log('MembersStore:onOpenRoom:activeRoom', 'Add new user', id);
+	                    self.onAddUser(activeRoom.get('id'), _immutable2['default'].Map({
+	                        'id': id,
+	                        name: 'Visitor-' + id
+	                    }));
+	                } else {
+	                    self.onRemoveUser(activeRoom.get('id'));
+	                }
+	            }, 1000);
+	            _checkIntervals.push(intervalId);
 	        }
 	        this.trigger(this.getAllMembers());
 	    },
 	    onAddUser: function onAddUser(roomId, user) {
+	        _bragiBrowser2['default'].log('MembersStore:onAddUser', 'called...', roomId, user);
 	        //Adds a new user in room `roomId` with the following data `user`
-	        var entry = _members.get(roomId);
-	        if (entry) {
-	            _members = _members.set(user.get('id'), user);
-	            _idIndex++;
-	        } else {
-	            _bragiBrowser2['default'].log('error:MembersStore:onAddUser', 'Didnt find room', roomId, user);
-	            //Initialize a new object for the room!
-	            _members = _members.set(roomId, _immutable2['default'].Map({ members: _immutable2['default'].Map() }));
-	            // Get the object to mutate the data
-	            var membersOfRoom = _members.get(roomId);
-
-	            _bragiBrowser2['default'].log('error:MembersStore:onAddUser', 'membersOfRoom', membersOfRoom);
-	            //Add a new user to the members object!
-	            membersOfRoom = membersOfRoom.get('members').set(_idIndex, userMap);
-	            //Create a new instance of the members data structure
-	            _members = _members.set(roomId, membersOfRoom);
-	            //Increase the user id
-	            _idIndex++;
+	        var members = _members.getIn([roomId, 'members']);
+	        // Check if the room has a members map
+	        if (members) {
+	            // Set the new user infos for the passed in room!
+	            members = members.set(user.get('id'), user);
+	            // Set the new members map
+	            _members = _members.setIn([roomId, 'members'], members);
+	            //Inform all the views and other stores that the data changed!
+	            this.trigger(this.getAllMembers());
 	        }
-	        this.trigger(this.getAllMembers());
 	    },
 	    onRemoveUser: function onRemoveUser(roomId) {
 	        _bragiBrowser2['default'].log('MembersStore:onRemoveUser', 'Remove a random user in room:', roomId);
-	        var keys = Object.keys(_members[roomId].members);
-	        var sample = _lodash2['default'].sample(keys);
-	        var membersOfRoom = _members[roomId];
-	        delete membersOfRoom.members[sample];
-	        _members = _members.set(roomId, membersOfRoom);
+	        var keys = Object.keys(_members.get(roomId).get('members').toObject());
+	        // Get a random key from the members map
+	        var randomKey = _lodash2['default'].sample(keys);
+	        // Remove the random member from the members map
+	        var newMembers = _members.getIn([roomId, 'members'])['delete'](randomKey);
+	        // Set the new members map to the main data structure.
+	        _members = _members.setIn([roomId, 'members'], newMembers);
+	        //Inform all the views and other stores that the data changed!
 	        this.trigger(this.getAllMembers());
 	    }
 	});
@@ -56405,23 +56436,13 @@
 
 	var _reactAddons2 = _interopRequireDefault(_reactAddons);
 
-	var _reflux = __webpack_require__(231);
-
-	var _reflux2 = _interopRequireDefault(_reflux);
-
 	var _bragiBrowser = __webpack_require__(200);
 
 	var _bragiBrowser2 = _interopRequireDefault(_bragiBrowser);
 
-	var _reactRouter = __webpack_require__(161);
-
 	var _classnames = __webpack_require__(253);
 
 	var _classnames2 = _interopRequireDefault(_classnames);
-
-	var _lodash = __webpack_require__(259);
-
-	var _lodash2 = _interopRequireDefault(_lodash);
 
 	var _immutable = __webpack_require__(268);
 
@@ -56434,18 +56455,6 @@
 	var _actionsActionCreatorJs = __webpack_require__(255);
 
 	var _actionsActionCreatorJs2 = _interopRequireDefault(_actionsActionCreatorJs);
-
-	var _storesRoomsStoreJs = __webpack_require__(254);
-
-	var _storesRoomsStoreJs2 = _interopRequireDefault(_storesRoomsStoreJs);
-
-	var _MembersListJsx = __webpack_require__(258);
-
-	var _MembersListJsx2 = _interopRequireDefault(_MembersListJsx);
-
-	var _ChatWindowJsx = __webpack_require__(261);
-
-	var _ChatWindowJsx2 = _interopRequireDefault(_ChatWindowJsx);
 
 	//==============================================================================
 	// Configs
@@ -56477,7 +56486,7 @@
 	                { className: classNameString,
 	                    key: room.get('id'),
 	                    title: 'open chat room',
-	                    onClick: self.props.onRoomCellClick.bind(null, room) },
+	                    onClick: self.props.onRoomOpen.bind(null, room) },
 	                room.get('title')
 	            );
 	        });

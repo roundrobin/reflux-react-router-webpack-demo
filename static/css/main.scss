@@ -176,6 +176,20 @@ body {
     opacity: 1;
 }
 
+
+.members-enter {
+    @include transition(opacity 0.3s);
+    opacity: 0;
+}
+
+.members-enter-active {
+    opacity: 1;
+}
+
+.members-enter-leave {
+    opacity: 1;
+}
+
 h1.u-inline {
     margin: 0px;
     margin-right: 20px;
