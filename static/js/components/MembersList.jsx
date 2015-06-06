@@ -37,7 +37,6 @@ let MembersList = React.createClass({
     if(self.state.members){
 
       members = self.state.members.map(function(member, key){
-        logger.log("MembersList:render:map", "key", member.toJS(), key);
         return <div key={member.get("id")} className="members-area__item">{member.get("name")}-{member.get("id")}</div>;
       })
 

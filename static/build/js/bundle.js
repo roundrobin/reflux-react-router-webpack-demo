@@ -29675,7 +29675,6 @@
 	    if (self.state.members) {
 
 	      members = self.state.members.map(function (member, key) {
-	        _bragiBrowser2['default'].log('MembersList:render:map', 'key', member.toJS(), key);
 	        return _reactAddons2['default'].createElement(
 	          'div',
 	          { key: member.get('id'), className: 'members-area__item' },
@@ -51542,6 +51541,10 @@
 
 	var _RoomsStore2 = _interopRequireDefault(_RoomsStore);
 
+	var _ChatMessagesStore = __webpack_require__(270);
+
+	var _ChatMessagesStore2 = _interopRequireDefault(_ChatMessagesStore);
+
 	var _actionsActionCreator = __webpack_require__(255);
 
 	var _actionsActionCreator2 = _interopRequireDefault(_actionsActionCreator);
@@ -51565,6 +51568,9 @@
 	//       }
 	// });
 	//
+
+	var _randomChatMessages = ['Hey', 'Need some help!', 'Hey man, how are you?', 'Yo peeps!', 'Bonjour!', 'Someone here?'];
+
 	var _members = _immutable2['default'].Map();
 	// Keeps track of all intervals created when opening a rooms!
 	var _checkIntervals = [];
@@ -51617,10 +51623,13 @@
 	                if (Math.round(Math.random()) === 1) {
 	                    var id = Math.floor(Math.random() * 1000000) + '';
 	                    _bragiBrowser2['default'].log('MembersStore:onOpenRoom:activeRoom', 'Add new user', id);
-	                    self.onAddUser(activeRoom.get('id'), _immutable2['default'].Map({
+	                    var user = _immutable2['default'].Map({
 	                        'id': id,
 	                        name: 'Visitor-' + id
-	                    }));
+	                    });
+	                    self.onAddUser(activeRoom.get('id'), user);
+	                    var randMsg = Math.floor(Math.random() * _randomChatMessages.length) + 1;
+	                    _actionsActionCreator2['default'].addUnconfirmedMessage(_randomChatMessages[randMsg - 1], activeRoom.get('id'), user);
 	                } else {
 	                    self.onRemoveUser(activeRoom.get('id'));
 	                }

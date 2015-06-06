@@ -9,6 +9,7 @@ import Immutable from 'immutable';
 // Internal dependencies
 //==============================================================================
 import RoomsStore from './RoomsStore';
+import ChatMessagesStore from './ChatMessagesStore';
 import ActionCreator from '../actions/ActionCreator';
 import AsyncActionCreator from '../actions/AsyncActionCreator';
 //==============================================================================
@@ -26,6 +27,16 @@ import AsyncActionCreator from '../actions/AsyncActionCreator';
 //       }
 // });
 //
+
+var _randomChatMessages = [
+    "Hey",
+    "Need some help!",
+    "Hey man, how are you?",
+     "Yo peeps!", 
+     "Bonjour!",
+    "Someone here?"
+];
+
 var _members = Immutable.Map();
 // Keeps track of all intervals created when opening a rooms!
 var _checkIntervals = [];
@@ -78,10 +89,14 @@ let MembersStore = Reflux.createStore({
                 if (Math.round(Math.random()) === 1) {
                     var id = Math.floor(Math.random() * 1000000) + "";
                     logger.log("MembersStore:onOpenRoom:activeRoom", "Add new user", id);
-                    self.onAddUser(activeRoom.get("id"), Immutable.Map({
+                    var user = Immutable.Map({
                         "id": id,
                         name: "Visitor-" + id
-                    }));
+                    });
+                    self.onAddUser(activeRoom.get("id"), user);
+                    var randMsg = Math.floor(Math.random() * _randomChatMessages.length) + 1;
+                    ActionCreator.addUnconfirmedMessage(_randomChatMessages[randMsg-1], activeRoom.get("id"), user);
+
                 } else {
                     self.onRemoveUser(activeRoom.get("id"));
                 }
