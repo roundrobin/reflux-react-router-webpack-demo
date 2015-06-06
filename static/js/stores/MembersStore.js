@@ -27,6 +27,7 @@ import AsyncActionCreator from '../actions/AsyncActionCreator';
 //       }
 // });
 //
+var _members = Immutable.Map();
 
 var _randomChatMessages = [
     "Hey",
@@ -36,8 +37,6 @@ var _randomChatMessages = [
      "Bonjour!",
     "Someone here?"
 ];
-
-var _members = Immutable.Map();
 // Keeps track of all intervals created when opening a rooms!
 var _checkIntervals = [];
 //==============================================================================

@@ -51568,10 +51568,9 @@
 	//       }
 	// });
 	//
+	var _members = _immutable2['default'].Map();
 
 	var _randomChatMessages = ['Hey', 'Need some help!', 'Hey man, how are you?', 'Yo peeps!', 'Bonjour!', 'Someone here?'];
-
-	var _members = _immutable2['default'].Map();
 	// Keeps track of all intervals created when opening a rooms!
 	var _checkIntervals = [];
 	//==============================================================================

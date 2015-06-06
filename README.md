@@ -30,15 +30,16 @@ This demo SPA shows how stores and actions in Flux work in conjunction with the 
 purpose of the demo, we implement a chat room store,  which holds the data of all rooms and a list of
 all active rooms. Based on that data we implement a couple of views visualizing lists and chat rooms.
 
-##Features of the demo
-* Flux implementation via Reflux
-* Master/Detail view via React-Router
-* CSS animations via React's CSSTransitionGroup.
-* Canonical URLs via React-Router
-* Application logging via Bragi
-* Usage of E7 features via Bable
-* Data structures with Immutable.js
+## Features of the demo
+* Flux implementation via `Reflux`
+* Master/Detail view via `react-Router`
+* CSS animations via React's `CSSTransitionGroup`.
+* Canonical URLs via `react-Router`
+* Application logging via `Bragi`
+* Usage of E7 features via `Bable`
+* Data structures with `Immutable.js`
 * Uses BEM as CSS naming conventation
+* App asset generation via `Webpack` and `NPM`!
 
 ## Advantages Reflux
 * Small code base (~13kb)
@@ -48,12 +49,6 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 
 ## Not included
 * Isomorphic setup (no server side rendering)
-
-## TODOs
-
-* Show how to use Ajax requests in Flux
-* Show how to use WebSockets in Flux
-* Show how to use Localstorage in Flux
 
 ## Resources
 
