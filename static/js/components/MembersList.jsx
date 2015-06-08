@@ -46,7 +46,7 @@ let MembersList = React.createClass({
 
     }
     return (<div className="members-list">
-          <h2>Friendlist for room: {this.props.roomId}</h2>
+          <h2>Members of room: {this.props.roomId}</h2>
           <div className="members-area">
               {members}              
           </div>

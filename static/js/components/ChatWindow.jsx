@@ -143,10 +143,11 @@ let ChatWindow = React.createClass({
             });
 
         return (<div className="chat-window">
-          <h2>Chat window</h2>
-          <header>Open rooms: {this.props.roomId}</header>  
+          <h2>Room: {this.props.roomId}</h2>
+          <header>Status: joined</header>  
           <div className={"messages-thread"} ref="messagesThread">{messages}</div>  
           <div className="chat-window__reply-box">
+
             <input className="chat-window__input" 
                    type="text" 
                    onKeyDown={this._onKeyDown}

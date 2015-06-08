@@ -43977,6 +43977,15 @@
 	  contextTypes: {
 	    router: _reactAddons2['default'].PropTypes.func
 	  },
+	  statics: {
+	    willTransitionTo: function willTransitionTo(transition, params, query, callback) {
+	      _bragiBrowser2['default'].log('RoomDetail:willTransitionTo', 'called.....', arguments);
+	      callback();
+	    },
+	    willTransitionFrom: function willTransitionFrom(transition, component) {
+	      _bragiBrowser2['default'].log('RoomDetail:willTransitionFrom', 'called.....');
+	    }
+	  },
 	  mixins: [_reactImmutableRenderMixin2['default'],
 	  // Connect to the Room store and pick the object for the passed in room.
 	  _reflux2['default'].connectFilter(_storesRoomsStoreJs2['default'], 'room', function (rooms) {
@@ -43985,33 +43994,38 @@
 	    return room;
 	  }), _reflux2['default'].connectFilter(_storesMembersStore2['default'], 'members', function (members) {
 	    var membersOfRoom = members.get(this.props.params.roomSlug);
-	    _bragiBrowser2['default'].log('RoomDetail:connectFilter:MembersStore', 'members length: ', membersOfRoom);
+	    // Checks if a record for the passed in room was found.
 	    if (membersOfRoom && membersOfRoom.get('members')) {
 	      return membersOfRoom.get('members');
 	    }
+
+	    //If no record was found, we return an empty map.
 	    return _immutable2['default'].Map();
 	  })],
+	  componentWillMount: function componentWillMount() {
+	    _bragiBrowser2['default'].log('RoomDetail:componentWillMount', 'called...', this.state);
+	    // if the passed in room is empty we transition to the rooms list and
+	    if (!this.state.room) {
+	      this.context.router.transitionTo('/404');
+	      //Overwrite the normal render!
+	      this.render = function () {
+	        return _reactAddons2['default'].createElement('div', null);
+	      };
+	    }
+	  },
 	  render: function render() {
 	    _bragiBrowser2['default'].log('RoomDetail:render', 'state. roomId:', this.state);
 	    var self = this;
 	    var view;
-	    // If a room was found in the store, we render the chat window and members list.
-	    if (this.state.room) {
-	      var roomId = this.state.room.get('id');
-	      _bragiBrowser2['default'].log('RoomDetail:render', 'Found a room');
-	      view = _reactAddons2['default'].createElement(
-	        'div',
-	        null,
-	        _reactAddons2['default'].createElement(_ChatWindowJsx2['default'], { roomId: roomId }),
-	        _reactAddons2['default'].createElement(_MembersListJsx2['default'], { roomId: roomId, members: this.state.members })
-	      );
-	    } else {
-	      // If for some reason, no room was found in the store, we transition back to
-	      // the list view
-	      _bragiBrowser2['default'].log('RoomDetail:render', 'Not found the room');
-	      view = 'room not found';
-	      this.context.router.transitionTo('/list/popular');
-	    }
+	    var roomId = this.state.room.get('id');
+	    _bragiBrowser2['default'].log('RoomDetail:render', 'Found a room');
+	    view = _reactAddons2['default'].createElement(
+	      'div',
+	      null,
+	      _reactAddons2['default'].createElement(_ChatWindowJsx2['default'], { roomId: roomId }),
+	      _reactAddons2['default'].createElement(_MembersListJsx2['default'], { roomId: roomId, members: this.state.members })
+	    );
+
 	    return _reactAddons2['default'].createElement(
 	      'div',
 	      { className: 'active-rooms' },
@@ -44110,7 +44124,7 @@
 	      _reactAddons2['default'].createElement(
 	        'h2',
 	        null,
-	        'Friendlist for room: ',
+	        'Members of room: ',
 	        this.props.roomId
 	      ),
 	      _reactAddons2['default'].createElement(
@@ -56878,13 +56892,13 @@
 	            _reactAddons2['default'].createElement(
 	                'h2',
 	                null,
-	                'Chat window'
+	                'Room: ',
+	                this.props.roomId
 	            ),
 	            _reactAddons2['default'].createElement(
 	                'header',
 	                null,
-	                'Open rooms: ',
-	                this.props.roomId
+	                'Status: joined'
 	            ),
 	            _reactAddons2['default'].createElement(
 	                'div',
