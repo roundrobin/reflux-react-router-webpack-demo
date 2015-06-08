@@ -1,3 +1,14 @@
+/*
+ *
+ * `Home.jsx` 
+ *
+ * Renders the `Home` component.
+ *
+ * Usage:
+ * ```
+ *    <Home/>
+ * ```
+ */
 //==============================================================================
 // External dependencies
 //==============================================================================
@@ -15,7 +26,8 @@ let HomeView = React.createClass({
   },
   render() {
     return <div className="home-view">
-      Home route
+      <h1>Home route</h1>
+      <p>Click on <i>Popular Rooms</i> in the nav bar.</p>
     </div>;
   }
 });

@@ -1,3 +1,11 @@
+/*
+ *
+ * `AppHandler.jsx` 
+ *
+ * Renders the master view of the app which holds the `RouterHandler` component
+ * responsible reacting to registered routes in the browser.
+ * 
+ */
 //==============================================================================
 // External dependencies
 //==============================================================================

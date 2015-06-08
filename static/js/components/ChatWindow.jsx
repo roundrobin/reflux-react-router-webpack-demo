@@ -1,16 +1,16 @@
 /*
  *
  * `ChatWindow` component
- *
- * Usage:
- * ```
- *   <ChatWindow roomId="123" />
- * ```     
- * 
+ *    
  * This view shows how to implement a set ofstate which has some of it's data derrive
  * from a store and some of the data add locally. In this example the state of 
  * the HTML input field is kept locally, but the messages come from the 
  * `ChatMessagesStore`.
+ *
+ * Usage:
+ * ```
+ *   <ChatWindow roomId="123" />
+ * ```  
  *
  */
 //==============================================================================

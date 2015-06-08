@@ -1,3 +1,15 @@
+/*
+ *
+ * `MembersList.jsx` 
+ *
+ * Renders a members of a chat room! It get it's data from the
+ * `MembersStore`.
+ *
+ * Usage:
+ * ```
+ *    <MembersList roomId='123'/>
+ * ```
+ */
 //==============================================================================
 // External dependencies
 //==============================================================================

@@ -1,3 +1,14 @@
+/*
+ *
+ * `NoRoomSelectedDetail.jsx` 
+ *
+ * Renders a default view if no chat room is selected yet!
+ *
+ * Usage:
+ * ```
+ *     <NoRoomSelectedDetail/>
+ * ```
+ */
 //==============================================================================
 // External dependencies
 //==============================================================================

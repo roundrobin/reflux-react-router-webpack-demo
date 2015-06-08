@@ -1,12 +1,22 @@
+/*
+ *
+ * `NotFound.jsx` 
+ *
+ * Renders the 404 page!
+ * 
+ */
+ //==============================================================================
+// External dependencies
+//==============================================================================
 import React from 'react';
-import { RouteHandler } from 'react-router';
-
+//==============================================================================
+// Component definition
+//==============================================================================
 let ListView = React.createClass({
-
   render() {
     return (
-      <div className="list-view">
-        Not found
+      <div className="home-view">
+        <h1>(404) PageNot found</h1>
       </div>
     );
   },
