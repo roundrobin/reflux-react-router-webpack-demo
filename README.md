@@ -36,7 +36,7 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 * CSS animations via React's `CSSTransitionGroup`.
 * Canonical URLs via `react-Router`
 * Application logging via `Bragi`
-* Usage of E7 features via `Bable`
+* Usage of E7 features via `Babel`
 * Data structures with `Immutable.js`
 * Uses BEM as CSS naming conventation
 * App asset generation via `Webpack` and `NPM`!
@@ -54,7 +54,7 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 
 * [Reflux Documentation](https://github.com/spoike/refluxjs)
 * [Article: Reflux](http://henleyedition.com/building-an-app-using-react-and-refluxjs/)
-* [Article: Introdction to contexts](https://www.tildedave.com/2014/11/15/introduction-to-contexts-in-react-js.html)
+* [Article: Introduction to contexts](https://www.tildedave.com/2014/11/15/introduction-to-contexts-in-react-js.html)
 
 ## Feedback
 
