@@ -20,13 +20,25 @@ import Reflux from 'reflux';
 import logger from 'bragi-browser';
 import { RouteHandler, Link } from 'react-router';
 import Immutable from 'immutable';
+import ImmutableRenderMixin from 'react-immutable-render-mixin';
+
 //==============================================================================
 // Internal dependencies
 //==============================================================================
+//-------------------------------------
+// Actions
+//-------------------------------------
 import ActionCreators from '../actions/ActionCreator.js';
+//-------------------------------------
+// Stores
+//-------------------------------------
 import RoomsStore from '../stores/RoomsStore.js';
-import MembersList from './MembersList.jsx';
+import MembersStore from '../stores/MembersStore';
+//-------------------------------------
+// Views
+//-------------------------------------
 import ChatWindow from './ChatWindow.jsx';
+import MembersList from './MembersList.jsx';
 //==============================================================================
 // Module definition
 //==============================================================================
@@ -35,14 +47,21 @@ let RoomDetail = React.createClass({
     router: React.PropTypes.func
   },
   mixins: [
+    ImmutableRenderMixin,
     // Connect to the Room store and pick the object for the passed in room.
     Reflux.connectFilter(RoomsStore, "room", function(rooms) {
-      logger.log("RoomDetail:connectFilter", "callled...props", this.props.params.roomSlug);
-      var roomId = Object.keys(rooms.toObject()).filter(function(roomId) {
-        return String(rooms.get(roomId).get("id")) === String(this.props.params.roomSlug);
-      }.bind(this))[0];
-      return rooms.get(roomId);
-    })
+      var room = rooms.get(this.props.params.roomSlug);
+      logger.log("RoomDetail:connectFilter:RoomsStore", "room", room);
+      return room;
+    }),
+    Reflux.connectFilter(MembersStore, "members", function(members) {
+        var membersOfRoom = members.get(this.props.params.roomSlug);
+        logger.log("RoomDetail:connectFilter:MembersStore", "members length: ", membersOfRoom);
+        if(membersOfRoom && membersOfRoom.get("members")){
+          return membersOfRoom.get("members");  
+        }
+        return Immutable.Map();
+    })    
   ],
   render() {
     logger.log("RoomDetail:render", "state. roomId:", this.state);
@@ -50,10 +69,11 @@ let RoomDetail = React.createClass({
     var view;
     // If a room was found in the store, we render the chat window and members list.
     if(this.state.room){
+        var roomId = this.state.room.get("id");
         logger.log("RoomDetail:render", "Found a room");
         view = <div>
-              <ChatWindow roomId={this.state.room.get("id")}><div>Openend room: {this.state.room.get("id")}</div></ChatWindow>         
-              <MembersList roomId={this.state.room.get("id")}/>
+              <ChatWindow roomId={roomId}/>         
+              <MembersList roomId={roomId} members={this.state.members}/>
         </div>;
           
     }else{

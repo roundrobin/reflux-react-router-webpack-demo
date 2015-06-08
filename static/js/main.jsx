@@ -28,6 +28,11 @@ import  '../css/main.scss'; // Builds the main CSS file!
 // Config
 //------------------------------------------------------------------------------
 const rootEl = document.getElementById('main');
+
+// logger.options.groupsEnabled = [ 'MembersList:render', 'RoomDetail:connectFilter',
+//  "ChatWindow:render", "ChatWindow:componentDidMount", "ChatWindow:getInitialState" ]
+// logger.options.groupsDisabled = true; 
+
 //------------------------------------------------------------------------------
 // Module definition
 //------------------------------------------------------------------------------

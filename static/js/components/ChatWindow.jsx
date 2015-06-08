@@ -22,12 +22,15 @@ import logger from 'bragi-browser';
 import { RouteHandler, Link } from 'react-router';
 import Immutable from 'immutable';
 import classNames from 'classnames';
+import ImmutableRenderMixin from 'react-immutable-render-mixin';
 //==============================================================================
 // Internal dependencies
 //==============================================================================
 import ActionCreator from '../actions/ActionCreator.js';
 import AsyncActionCreator from '../actions/AsyncActionCreator.js';
 import ChatMessagesStore from '../stores/ChatMessagesStore.js';
+let PureRenderMixin  = React.addons.PureRenderMixin;
+
 //==============================================================================
 // Constants / Configs
 //==============================================================================
@@ -44,6 +47,14 @@ let ChatWindow = React.createClass({
     contextTypes: {
         router: React.PropTypes.func
     },
+    shouldComponentUpdate(nextProps, nextState){
+        // Shows an example on how to override `shouldComponentUpdate` to avoid 
+        // uneccessary renders.
+        // var sameProps = JSON.stringify(this.props) === JSON.stringify(nextProps);
+        // var sameState = nextState === this.state;
+        // return !(sameProps && sameState);
+        return true;;
+    },     
     getInitialState() {
         logger.log("ChatWindow:getInitialState", "called...", this.props.roomId);
         return {
@@ -54,10 +65,6 @@ let ChatWindow = React.createClass({
     componentDidMount() {
         logger.log("ChatWindow:componentDidMount", "props", this.props);
         this.listenTo(ChatMessagesStore, this._onStatusChange);
-        this._addMessage("Welcome to the chat room!", Immutable.Map({
-            id: 2,
-            name: "System"
-        }));
     },
     _onStatusChange(storeMessages) {
         logger.log("ChatWindow:onStatusChange", "storeMessages:", storeMessages.toObject());
@@ -72,29 +79,39 @@ let ChatWindow = React.createClass({
         });
     },
     _clickSend() {
+        // The user hit the "Send button" button.
         logger.log("ChatWindow:_clickSend", "called...");
         this._addMessage(this.state.text.trim(), exampleUser);
+
+        // Reset the reply box
         this.setState({
             text: ""
         });
     },
     _handleChange(event) {
+        // The user typed in characters in the reply box.
         logger.log("ChatWindow:_onChange", "called...", event);
         this.setState({
             text: event.target.value
         });
     },
     _addMessage(text, user) {
+        // The enter key was hit, so we trigger an action!
         logger.log("ChatWindow:_onChange", "called...text", text);
         ActionCreator.addUnconfirmedMessage(text, this.props.roomId, user);
     },
     _onKeyDown(event) {
+        // The user typed in any character.
         if (event.keyCode === ENTER_KEY_CODE) {
+            // The ENTER key was pressed
             event.preventDefault();
             let text = this.state.text.trim();
+            // If there is any text in the text box, add it to the chat messages.
             if (text) {
                 this._addMessage(text, exampleUser);
                 logger.log("ChatWindow:_onKeyDown", "Enter key hit!");
+                // After adding the message to the chat messages DIV we can
+                // clear out the text state.
                 this.setState({
                     text: ""
                 });
@@ -104,24 +121,30 @@ let ChatWindow = React.createClass({
     render() {
         logger.log("ChatWindow:render", "state", this.state);
         var self = this;
+
+        // First sort all the chat messages by date.
+        // Next it creates a collection of chat messages markup.
         var messages = Object.keys(this.state.messages)
-            .sort(function(idFirst, idSecond) {
+            .sort(function sortMsgByDate(idFirst, idSecond) {
                 var objA = self.state.messages[idFirst];
                 var objB = self.state.messages[idSecond];
                 return objA.get("date") - objB.get("date");
             })
-            .map(function(messageId, index) {
+            .map(function mapKeys(messageId, index) {
                 var msg = self.state.messages[messageId];
                 let classString = classNames("message", {
                     "message--unfirmed": msg.get("confirmed")
                 });
-                return (<div className={classString} key={index}>[{index}] 
+                return (
+                    <div className={classString} key={index}>[{index}][<em>{msg.get("id")}</em>] 
                         <b>{msg.get("user").get("name")}:</b> {msg.get("text")}
-                </div>);
+                    </div>
+                );
             });
+
         return (<div className="chat-window">
           <h2>Chat window</h2>
-          <header>{this.props.children}</header>  
+          <header>Open rooms: {this.props.roomId}</header>  
           <div className={"messages-thread"} ref="messagesThread">{messages}</div>  
           <div className="chat-window__reply-box">
             <input className="chat-window__input" 

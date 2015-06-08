@@ -96,6 +96,11 @@
 	// Config
 	//------------------------------------------------------------------------------
 	var rootEl = document.getElementById('main');
+
+	// logger.options.groupsEnabled = [ 'MembersList:render', 'RoomDetail:connectFilter',
+	//  "ChatWindow:render", "ChatWindow:componentDidMount", "ChatWindow:getInitialState" ]
+	// logger.options.groupsDisabled = true;
+
 	//------------------------------------------------------------------------------
 	// Module definition
 	//------------------------------------------------------------------------------
@@ -38565,18 +38570,29 @@
 	//==============================================================================
 	// Internal dependencies
 	//==============================================================================
+	//-------------------------------------
+	// Actions
+	//-------------------------------------
 
-	var _componentsRoomListJsx = __webpack_require__(257);
+	var _actionsActionCreatorJs = __webpack_require__(38);
 
-	var _componentsRoomListJsx2 = _interopRequireDefault(_componentsRoomListJsx);
+	var _actionsActionCreatorJs2 = _interopRequireDefault(_actionsActionCreatorJs);
+
+	//-------------------------------------
+	// Stores
+	//-------------------------------------
 
 	var _storesRoomsStoreJs = __webpack_require__(259);
 
 	var _storesRoomsStoreJs2 = _interopRequireDefault(_storesRoomsStoreJs);
 
-	var _actionsActionCreatorJs = __webpack_require__(38);
+	//-------------------------------------
+	// Views
+	//-------------------------------------
 
-	var _actionsActionCreatorJs2 = _interopRequireDefault(_actionsActionCreatorJs);
+	var _componentsRoomListJsx = __webpack_require__(257);
+
+	var _componentsRoomListJsx2 = _interopRequireDefault(_componentsRoomListJsx);
 
 	//==============================================================================
 	// Module definition
@@ -38596,11 +38612,14 @@
 	        var id = Math.floor(Math.random() * 10000) + '';
 	        var newRoom = _immutable2['default'].Map({
 	            'title': 'room-' + id,
-	            'id': id + ''
+	            'id': id
 	        });
+	        // Fires `addRoom` action!
 	        _actionsActionCreatorJs2['default'].addRoom(newRoom);
 	    },
 	    _onRoomOpen: function _onRoomOpen(room) {
+	        _bragiBrowser2['default'].log('RoomListMaster:_onRoomOpen', 'called...');
+	        // Fires `openRoom` action!
 	        _actionsActionCreatorJs2['default'].openRoom(room);
 	        this.context.router.transitionTo('/room/' + room.get('id'));
 	    },
@@ -43910,25 +43929,44 @@
 
 	var _immutable2 = _interopRequireDefault(_immutable);
 
+	var _reactImmutableRenderMixin = __webpack_require__(270);
+
+	var _reactImmutableRenderMixin2 = _interopRequireDefault(_reactImmutableRenderMixin);
+
 	//==============================================================================
 	// Internal dependencies
 	//==============================================================================
+	//-------------------------------------
+	// Actions
+	//-------------------------------------
 
 	var _actionsActionCreatorJs = __webpack_require__(38);
 
 	var _actionsActionCreatorJs2 = _interopRequireDefault(_actionsActionCreatorJs);
 
+	//-------------------------------------
+	// Stores
+	//-------------------------------------
+
 	var _storesRoomsStoreJs = __webpack_require__(259);
 
 	var _storesRoomsStoreJs2 = _interopRequireDefault(_storesRoomsStoreJs);
 
-	var _MembersListJsx = __webpack_require__(262);
+	var _storesMembersStore = __webpack_require__(265);
 
-	var _MembersListJsx2 = _interopRequireDefault(_MembersListJsx);
+	var _storesMembersStore2 = _interopRequireDefault(_storesMembersStore);
+
+	//-------------------------------------
+	// Views
+	//-------------------------------------
 
 	var _ChatWindowJsx = __webpack_require__(267);
 
 	var _ChatWindowJsx2 = _interopRequireDefault(_ChatWindowJsx);
+
+	var _MembersListJsx = __webpack_require__(262);
+
+	var _MembersListJsx2 = _interopRequireDefault(_MembersListJsx);
 
 	//==============================================================================
 	// Module definition
@@ -43939,14 +43977,19 @@
 	  contextTypes: {
 	    router: _reactAddons2['default'].PropTypes.func
 	  },
-	  mixins: [
+	  mixins: [_reactImmutableRenderMixin2['default'],
 	  // Connect to the Room store and pick the object for the passed in room.
 	  _reflux2['default'].connectFilter(_storesRoomsStoreJs2['default'], 'room', function (rooms) {
-	    _bragiBrowser2['default'].log('RoomDetail:connectFilter', 'callled...props', this.props.params.roomSlug);
-	    var roomId = Object.keys(rooms.toObject()).filter((function (roomId) {
-	      return String(rooms.get(roomId).get('id')) === String(this.props.params.roomSlug);
-	    }).bind(this))[0];
-	    return rooms.get(roomId);
+	    var room = rooms.get(this.props.params.roomSlug);
+	    _bragiBrowser2['default'].log('RoomDetail:connectFilter:RoomsStore', 'room', room);
+	    return room;
+	  }), _reflux2['default'].connectFilter(_storesMembersStore2['default'], 'members', function (members) {
+	    var membersOfRoom = members.get(this.props.params.roomSlug);
+	    _bragiBrowser2['default'].log('RoomDetail:connectFilter:MembersStore', 'members length: ', membersOfRoom);
+	    if (membersOfRoom && membersOfRoom.get('members')) {
+	      return membersOfRoom.get('members');
+	    }
+	    return _immutable2['default'].Map();
 	  })],
 	  render: function render() {
 	    _bragiBrowser2['default'].log('RoomDetail:render', 'state. roomId:', this.state);
@@ -43954,21 +43997,13 @@
 	    var view;
 	    // If a room was found in the store, we render the chat window and members list.
 	    if (this.state.room) {
+	      var roomId = this.state.room.get('id');
 	      _bragiBrowser2['default'].log('RoomDetail:render', 'Found a room');
 	      view = _reactAddons2['default'].createElement(
 	        'div',
 	        null,
-	        _reactAddons2['default'].createElement(
-	          _ChatWindowJsx2['default'],
-	          { roomId: this.state.room.get('id') },
-	          _reactAddons2['default'].createElement(
-	            'div',
-	            null,
-	            'Openend room: ',
-	            this.state.room.get('id')
-	          )
-	        ),
-	        _reactAddons2['default'].createElement(_MembersListJsx2['default'], { roomId: this.state.room.get('id') })
+	        _reactAddons2['default'].createElement(_ChatWindowJsx2['default'], { roomId: roomId }),
+	        _reactAddons2['default'].createElement(_MembersListJsx2['default'], { roomId: roomId, members: this.state.members })
 	      );
 	    } else {
 	      // If for some reason, no room was found in the store, we transition back to
@@ -44039,11 +44074,6 @@
 	//==============================================================================
 	// Internal dependencies
 	//==============================================================================
-
-	var _storesMembersStore = __webpack_require__(265);
-
-	var _storesMembersStore2 = _interopRequireDefault(_storesMembersStore);
-
 	var ReactCSSTransitionGroup = _reactAddons2['default'].addons.CSSTransitionGroup;
 	//==============================================================================
 	// Module definition
@@ -44054,24 +44084,17 @@
 	  contextTypes: {
 	    router: _reactAddons2['default'].PropTypes.func
 	  },
-	  mixins: [_reflux2['default'].connectFilter(_storesMembersStore2['default'], 'members', function (state) {
-	    var membersObj = state.get(this.props.roomId + '');
-	    var returnObj = _immutable2['default'].Map();
-	    if (membersObj && membersObj.get('members')) {
-	      returnObj = membersObj.get('members');
-	    }
-
-	    _bragiBrowser2['default'].log('MembersList:connectFilter', 'props: %o members: %o ', this.props.roomId, returnObj.toJS());
-	    return returnObj;
-	  })],
 	  render: function render() {
 	    var self = this;
-	    _bragiBrowser2['default'].log('MembersList:render', 'state', self.state);
+	    _bragiBrowser2['default'].log('MembersList:render', 'state', self.props);
 
 	    var members;
-	    if (self.state.members) {
+	    if (self.props.members) {
+	      var memberKeys = Object.keys(self.props.members.toObject());
 
-	      members = self.state.members.map(function (member, key) {
+	      _bragiBrowser2['default'].log('MembersList:render', 'memberKeys', memberKeys);
+	      members = memberKeys.map(function (memberId, key) {
+	        var member = self.props.members.get(memberId);
 	        return _reactAddons2['default'].createElement(
 	          'div',
 	          { key: member.get('id'), className: 'members-area__item' },
@@ -56423,7 +56446,7 @@
 	// });
 	//
 	var _members = _immutable2['default'].Map();
-
+	// Holds an array of chat message for the bots.
 	var _randomChatMessages = ['Hey', 'Need some help!', 'Hey man, how are you?', 'Yo peeps!', 'Bonjour!', 'Someone here?'];
 	// Keeps track of all intervals created when opening a rooms!
 	var _checkIntervals = [];
@@ -56448,68 +56471,86 @@
 	    onOpenRoom: function onOpenRoom(room) {
 	        _bragiBrowser2['default'].log('MembersStore:onOpenRoom', 'called...', room);
 	        var self = this;
-	        if (!_members[room.get('id')]) {
-	            _bragiBrowser2['default'].log('MembersStore:onOpenRoom', 'Add new room to the object');
-	            var randId = Math.floor(Math.random() * 1000);
-	            _members = _members.set(room.get('id'), _immutable2['default'].Map({
-	                members: _immutable2['default'].Map({
-	                    '1': _immutable2['default'].Map({
-	                        name: 'Room Host ' + randId,
-	                        id: '1'
-	                    })
-	                })
-	            }));
-	        }
-	        var activeRoom = _RoomsStore2['default'].getActiveRoom();
+	        var activeRoomId = _RoomsStore2['default'].getActiveRoom().get('id');
+
+	        // If the room is empty we will add a host user
+	        var members = _members.getIn([activeRoomId, 'members']);
+	        //if (!members || (members && members.size === 0)) {
+	        var id = Math.floor(Math.random() * 1000000) + '';
+	        var user = _immutable2['default'].Map({
+	            'id': id,
+	            name: 'RoomHost-' + id
+	        });
+	        // Adds a random user to the currently active chat room!
+	        this.onAddUser(activeRoomId, user);
+	        _bragiBrowser2['default'].log('MembersStore:onOpenRoom', 'Adds room host to the members');
+	        var randMsg = Math.floor(Math.random() * _randomChatMessages.length) + 1;
+	        _actionsActionCreator2['default'].addUnconfirmedMessage(_randomChatMessages[randMsg - 1], activeRoomId, user);
+	        //}
+	        return;
 	        // Check if there is currently an active room set
-	        if (activeRoom) {
-	            _bragiBrowser2['default'].log('MembersStore:onOpenRoom:activeRoom', 'found active room', activeRoom);
+	        if (activeRoomId) {
+	            _bragiBrowser2['default'].log('MembersStore:onOpenRoom:activeRoomId', 'found active room', activeRoomId);
 	            // If the user had previously rooms open, we clear out all the setIntervals.
+
+	            _bragiBrowser2['default'].log('MembersStore:onOpenRoom:clearInterval', '_checkIntervals', _checkIntervals.length);
+
 	            _checkIntervals.forEach(function (intervalId) {
-	                _bragiBrowser2['default'].log('MembersStore:onOpenRoom:activeRoom', 'clear interval', intervalId);
+	                _bragiBrowser2['default'].log('MembersStore:onOpenRoom:clearInterval', 'clear interval', intervalId);
 	                clearInterval(intervalId);
 	            });
+
+	            _checkIntervals = [];
 	            // For demo purposes we add or remove random users to the members during
 	            // a session in a room.
 	            var intervalId = setInterval(function () {
 	                // Choose randomly between 0 and 1, and either add or remove a member.
 	                if (Math.round(Math.random()) === 1) {
 	                    var id = Math.floor(Math.random() * 1000000) + '';
-	                    _bragiBrowser2['default'].log('MembersStore:onOpenRoom:activeRoom', 'Add new user', id);
+	                    _bragiBrowser2['default'].log('MembersStore:onOpenRoom:setInterval', 'Add to active room: %o new user', activeRoomId, id);
+	                    // Creates a random user, which will be added to the room
 	                    var user = _immutable2['default'].Map({
 	                        'id': id,
 	                        name: 'Visitor-' + id
 	                    });
-	                    self.onAddUser(activeRoom.get('id'), user);
+	                    // Adds a random user to the currently active chat room!
+	                    self.onAddUser(activeRoomId, user);
 	                    var randMsg = Math.floor(Math.random() * _randomChatMessages.length) + 1;
-	                    _actionsActionCreator2['default'].addUnconfirmedMessage(_randomChatMessages[randMsg - 1], activeRoom.get('id'), user);
+	                    // To simulate a normal chat session, each Bot which connects
+	                    // to the chat room sends a random message to the room.
+	                    _actionsActionCreator2['default'].addUnconfirmedMessage(_randomChatMessages[randMsg - 1], activeRoomId, user);
 	                } else {
-	                    self.onRemoveUser(activeRoom.get('id'));
+	                    _bragiBrowser2['default'].log('MembersStore:onOpenRoom:setInterval', 'Remove random user from room');
+	                    self.onRemoveUser(activeRoomId);
 	                }
+	                // We inform all subscribers of this store, about a data change
+	                self.trigger(self.getAllMembers());
 	            }, 1000);
 	            _checkIntervals.push(intervalId);
 	        }
-	        this.trigger(this.getAllMembers());
 	    },
 	    onAddUser: function onAddUser(roomId, user) {
-	        _bragiBrowser2['default'].log('MembersStore:onAddUser', 'called...', roomId, user);
+	        _bragiBrowser2['default'].log('MembersStore:onAddUser', 'called... Add user to room: %o', roomId);
 	        //Adds a new user in room `roomId` with the following data `user`
 	        var members = _members.getIn([roomId, 'members']);
-	        // Check if the room has a members map
-	        if (members) {
-	            // Set the new user infos for the passed in room!
-	            members = members.set(user.get('id'), user);
-	            // Set the new members map
-	            //_members = _members.setIn([roomId, "members"], members);
-	            var membersArr = _members.get(roomId).set('members', members);
-	            _members = _members.set(roomId, membersArr);
-
-	            //Inform all the views and other stores that the data changed!
-	            this.trigger(this.getAllMembers());
+	        // Check if the room has a members map defined
+	        if (!members) {
+	            // Because the members map is not defined yet, we will initialize it
+	            // with an empty map!
+	            _members = _members.setIn([roomId, 'members'], _immutable2['default'].Map());
 	        }
+	        // Let's set the new user to the correct room!
+	        _members = _members.setIn([roomId, 'members', user.get('id')], user);
+	        // We inform all subscribers of this store, about a data change
+	        this.trigger(this.getAllMembers());
 	    },
 	    onRemoveUser: function onRemoveUser(roomId) {
 	        _bragiBrowser2['default'].log('MembersStore:onRemoveUser', 'Remove a random user in room:', roomId);
+	        var members = _members.getIn([roomId, 'members']);
+	        if (!members) {
+	            // Because the members map is not defined yet, we will create it!
+	            _members = _members.setIn([roomId, 'members'], _immutable2['default'].Map());
+	        }
 	        var keys = Object.keys(_members.get(roomId).get('members').toObject());
 	        // Get a random key from the members map
 	        var randomKey = _lodash2['default'].sample(keys);
@@ -56517,7 +56558,7 @@
 	        var newMembers = _members.getIn([roomId, 'members'])['delete'](randomKey);
 	        // Set the new members map to the main data structure.
 	        _members = _members.setIn([roomId, 'members'], newMembers);
-	        //Inform all the views and other stores that the data changed!
+	        // We inform all subscribers of this store, about a data change
 	        this.trigger(this.getAllMembers());
 	    }
 	});
@@ -56581,7 +56622,6 @@
 	//       }
 	// });
 	//
-
 	var exampleUser = _immutable2['default'].Map({
 	    id: 1,
 	    name: 'roundrobin'
@@ -56600,10 +56640,20 @@
 	    },
 	    onAddUnconfirmedMessage: function onAddUnconfirmedMessage(text, roomId, user) {
 	        _bragiBrowser2['default'].log('ChatMessagesStore:onAddUnconfirmedMessage', 'called...message %o room %o', text, roomId);
+	        var chatMessages = _messages.get(roomId);
 
-	        var randomMessageId = Math.floor(Math.random() * 1000000);
+	        //If no chat message was added yet, we add the default message.
+	        if (!chatMessages) {
+	            this._addMessage(roomId, 'Welcome to the chat room (' + roomId + '!)', user);
+	        }
 
-	        _messages = _messages.setIn([roomId, randomMessageId], _immutable2['default'].Map({
+	        this._addMessage(roomId, text, user);
+
+	        // We inform all subscribers of this store, about a data change
+	        this.trigger(this.getMessages(roomId));
+	    },
+	    _addMessage: function _addMessage(roomId, text, user) {
+	        _messages = _messages.setIn([roomId, _unconfirmedId], _immutable2['default'].Map({
 	            id: _unconfirmedId,
 	            text: text,
 	            date: +new Date(),
@@ -56612,10 +56662,6 @@
 	        }));
 
 	        _unconfirmedId++;
-
-	        _bragiBrowser2['default'].log('ChatMessagesStore:onAddUnconfirmedMessage', '_messages', _messages.toJS());
-
-	        this.trigger(this.getMessages(roomId));
 	    },
 	    getInitialState: function getInitialState(roomId) {
 	        return {};
@@ -56678,6 +56724,10 @@
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
+	var _reactImmutableRenderMixin = __webpack_require__(270);
+
+	var _reactImmutableRenderMixin2 = _interopRequireDefault(_reactImmutableRenderMixin);
+
 	//==============================================================================
 	// Internal dependencies
 	//==============================================================================
@@ -56693,6 +56743,8 @@
 	var _storesChatMessagesStoreJs = __webpack_require__(266);
 
 	var _storesChatMessagesStoreJs2 = _interopRequireDefault(_storesChatMessagesStoreJs);
+
+	var PureRenderMixin = _reactAddons2['default'].addons.PureRenderMixin;
 
 	//==============================================================================
 	// Constants / Configs
@@ -56712,6 +56764,14 @@
 	    contextTypes: {
 	        router: _reactAddons2['default'].PropTypes.func
 	    },
+	    shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	        // Shows an example on how to override `shouldComponentUpdate` to avoid
+	        // uneccessary renders.
+	        // var sameProps = JSON.stringify(this.props) === JSON.stringify(nextProps);
+	        // var sameState = nextState === this.state;
+	        // return !(sameProps && sameState);
+	        return true;;
+	    },
 	    getInitialState: function getInitialState() {
 	        _bragiBrowser2['default'].log('ChatWindow:getInitialState', 'called...', this.props.roomId);
 	        return {
@@ -56722,10 +56782,6 @@
 	    componentDidMount: function componentDidMount() {
 	        _bragiBrowser2['default'].log('ChatWindow:componentDidMount', 'props', this.props);
 	        this.listenTo(_storesChatMessagesStoreJs2['default'], this._onStatusChange);
-	        this._addMessage('Welcome to the chat room!', _immutable2['default'].Map({
-	            id: 2,
-	            name: 'System'
-	        }));
 	    },
 	    _onStatusChange: function _onStatusChange(storeMessages) {
 	        _bragiBrowser2['default'].log('ChatWindow:onStatusChange', 'storeMessages:', storeMessages.toObject());
@@ -56739,29 +56795,39 @@
 	        });
 	    },
 	    _clickSend: function _clickSend() {
+	        // The user hit the "Send button" button.
 	        _bragiBrowser2['default'].log('ChatWindow:_clickSend', 'called...');
 	        this._addMessage(this.state.text.trim(), exampleUser);
+
+	        // Reset the reply box
 	        this.setState({
 	            text: ''
 	        });
 	    },
 	    _handleChange: function _handleChange(event) {
+	        // The user typed in characters in the reply box.
 	        _bragiBrowser2['default'].log('ChatWindow:_onChange', 'called...', event);
 	        this.setState({
 	            text: event.target.value
 	        });
 	    },
 	    _addMessage: function _addMessage(text, user) {
+	        // The enter key was hit, so we trigger an action!
 	        _bragiBrowser2['default'].log('ChatWindow:_onChange', 'called...text', text);
 	        _actionsActionCreatorJs2['default'].addUnconfirmedMessage(text, this.props.roomId, user);
 	    },
 	    _onKeyDown: function _onKeyDown(event) {
+	        // The user typed in any character.
 	        if (event.keyCode === ENTER_KEY_CODE) {
+	            // The ENTER key was pressed
 	            event.preventDefault();
 	            var text = this.state.text.trim();
+	            // If there is any text in the text box, add it to the chat messages.
 	            if (text) {
 	                this._addMessage(text, exampleUser);
 	                _bragiBrowser2['default'].log('ChatWindow:_onKeyDown', 'Enter key hit!');
+	                // After adding the message to the chat messages DIV we can
+	                // clear out the text state.
 	                this.setState({
 	                    text: ''
 	                });
@@ -56771,11 +56837,14 @@
 	    render: function render() {
 	        _bragiBrowser2['default'].log('ChatWindow:render', 'state', this.state);
 	        var self = this;
-	        var messages = Object.keys(this.state.messages).sort(function (idFirst, idSecond) {
+
+	        // First sort all the chat messages by date.
+	        // Next it creates a collection of chat messages markup.
+	        var messages = Object.keys(this.state.messages).sort(function sortMsgByDate(idFirst, idSecond) {
 	            var objA = self.state.messages[idFirst];
 	            var objB = self.state.messages[idSecond];
 	            return objA.get('date') - objB.get('date');
-	        }).map(function (messageId, index) {
+	        }).map(function mapKeys(messageId, index) {
 	            var msg = self.state.messages[messageId];
 	            var classString = (0, _classnames2['default'])('message', {
 	                'message--unfirmed': msg.get('confirmed')
@@ -56785,6 +56854,12 @@
 	                { className: classString, key: index },
 	                '[',
 	                index,
+	                '][',
+	                _reactAddons2['default'].createElement(
+	                    'em',
+	                    null,
+	                    msg.get('id')
+	                ),
 	                ']',
 	                _reactAddons2['default'].createElement(
 	                    'b',
@@ -56796,6 +56871,7 @@
 	                msg.get('text')
 	            );
 	        });
+
 	        return _reactAddons2['default'].createElement(
 	            'div',
 	            { className: 'chat-window' },
@@ -56807,7 +56883,8 @@
 	            _reactAddons2['default'].createElement(
 	                'header',
 	                null,
-	                this.props.children
+	                'Open rooms: ',
+	                this.props.roomId
 	            ),
 	            _reactAddons2['default'].createElement(
 	                'div',
@@ -56907,6 +56984,64 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	"use strict";
+
+	var shallowEqualImmutable = __webpack_require__(271);
+
+	var ImmutableRenderMixin = {
+	  shouldComponentUpdate: function(nextProps, nextState) {
+	    return !shallowEqualImmutable(this.props, nextProps) ||
+	           !shallowEqualImmutable(this.state, nextState);
+	  }
+	};
+
+	module.exports = ImmutableRenderMixin;
+
+
+/***/ },
+/* 271 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Immutable = __webpack_require__(256);
+
+	var is = Immutable.is.bind(Immutable);
+
+	function shallowEqualImmutable(objA, objB) {
+	  if (objA === objB || is(objA, objB)) {
+	    return true;
+	  }
+
+	  if (typeof objA !== 'object' || objA === null ||
+	      typeof objB !== 'object' || objB === null) {
+	    return false;
+	  }
+	  
+	  var keysA = Object.keys(objA);
+	  var keysB = Object.keys(objB);
+
+	  if (keysA.length !== keysB.length) {
+	    return false;
+	  }
+
+	  // Test for A's keys different from B.
+	  var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
+	  for (var i = 0; i < keysA.length; i++) {
+	    if (!bHasOwnProperty(keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) {
+	      return false;
+	    }
+	  }
+
+	  return true;
+	}
+
+	module.exports = shallowEqualImmutable;
+
 
 /***/ }
 /******/ ]);

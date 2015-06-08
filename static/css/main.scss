@@ -181,6 +181,7 @@ body {
 }
 
 .room-list__item {
+    @include user-select(none);
     background: rgba(gray, 0.5);
     padding: 10px;
     border-radius: 3px;

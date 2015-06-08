@@ -26,7 +26,6 @@ import AsyncActionCreator from '../actions/AsyncActionCreator';
 //       }
 // });
 //
-
 let exampleUser = Immutable.Map({
     id: 1,
     name: "roundrobin"
@@ -45,10 +44,21 @@ let ChatMessagesStore = Reflux.createStore({
     },
     onAddUnconfirmedMessage(text, roomId, user){
     	logger.log("ChatMessagesStore:onAddUnconfirmedMessage", "called...message %o room %o", text, roomId);	
+        var chatMessages = _messages.get(roomId);
 
-        let randomMessageId= Math.floor(Math.random()*1000000);
+        //If no chat message was added yet, we add the default message.
+        if (!chatMessages) {
+            this._addMessage(roomId, `Welcome to the chat room (${roomId}!)`, user);
+        }
 
-    	_messages = _messages.setIn([roomId, randomMessageId], Immutable.Map({
+        this._addMessage(roomId, text, user);
+
+        // We inform all subscribers of this store, about a data change
+    	this.trigger(this.getMessages(roomId));
+    			
+    },
+    _addMessage: function(roomId, text, user){
+        _messages = _messages.setIn([roomId, _unconfirmedId], Immutable.Map({
             id: _unconfirmedId,
             text: text,
             date: +new Date(),
@@ -57,12 +67,7 @@ let ChatMessagesStore = Reflux.createStore({
         }));
 
         _unconfirmedId++;
-
-
-        logger.log("ChatMessagesStore:onAddUnconfirmedMessage", "_messages", _messages.toJS());   
-
-    	this.trigger(this.getMessages(roomId));
-    			
+            
     },
     getInitialState(roomId){
         return {};

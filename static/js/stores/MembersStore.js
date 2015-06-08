@@ -28,13 +28,13 @@ import AsyncActionCreator from '../actions/AsyncActionCreator';
 // });
 //
 var _members = Immutable.Map();
-
+// Holds an array of chat message for the bots.
 var _randomChatMessages = [
     "Hey",
     "Need some help!",
     "Hey man, how are you?",
-     "Yo peeps!", 
-     "Bonjour!",
+    "Yo peeps!",
+    "Bonjour!",
     "Someone here?"
 ];
 // Keeps track of all intervals created when opening a rooms!
@@ -60,69 +60,86 @@ let MembersStore = Reflux.createStore({
     onOpenRoom(room) {
         logger.log("MembersStore:onOpenRoom", "called...", room);
         var self = this;
-        if (!_members[room.get("id")]) {
-            logger.log("MembersStore:onOpenRoom", "Add new room to the object");
-            var randId = Math.floor(Math.random() * 1000);
-            _members = _members.set(room.get("id"), Immutable.Map({
-                members: Immutable.Map({
-                    "1": Immutable.Map({
-                        name: `Room Host ${randId}`,
-                        id: "1"
-                    })
-                })
-            }));
-        }
-        var activeRoom = RoomsStore.getActiveRoom();
+        var activeRoomId = RoomsStore.getActiveRoom().get("id");
+
+        // If the room is empty we will add a host user
+        var members = _members.getIn([activeRoomId, "members"]);
+        //if (!members || (members && members.size === 0)) {
+            var id = Math.floor(Math.random() * 1000000) + "";
+            var user = Immutable.Map({
+                "id": id,
+                name: "RoomHost-" + id
+            });
+            // Adds a random user to the currently active chat room!
+            this.onAddUser(activeRoomId, user);
+            logger.log("MembersStore:onOpenRoom", "Adds room host to the members");
+            var randMsg = Math.floor(Math.random() * _randomChatMessages.length) + 1;
+            ActionCreator.addUnconfirmedMessage(_randomChatMessages[randMsg - 1], activeRoomId, user);
+        //}
+        return;
         // Check if there is currently an active room set
-        if (activeRoom) {
-            logger.log("MembersStore:onOpenRoom:activeRoom", "found active room", activeRoom);
+        if (activeRoomId) {
+            logger.log("MembersStore:onOpenRoom:activeRoomId", "found active room", activeRoomId);
             // If the user had previously rooms open, we clear out all the setIntervals.
+
+            logger.log("MembersStore:onOpenRoom:clearInterval", "_checkIntervals", _checkIntervals.length);
+            
             _checkIntervals.forEach(function(intervalId) {
-                logger.log("MembersStore:onOpenRoom:activeRoom", "clear interval", intervalId);
+                logger.log("MembersStore:onOpenRoom:clearInterval", "clear interval", intervalId);
                 clearInterval(intervalId);
             });
+
+            _checkIntervals = [];
             // For demo purposes we add or remove random users to the members during
             // a session in a room.
             var intervalId = setInterval(function() {
                 // Choose randomly between 0 and 1, and either add or remove a member.
                 if (Math.round(Math.random()) === 1) {
                     var id = Math.floor(Math.random() * 1000000) + "";
-                    logger.log("MembersStore:onOpenRoom:activeRoom", "Add new user", id);
+                    logger.log("MembersStore:onOpenRoom:setInterval", "Add to active room: %o new user", activeRoomId, id);
+                    // Creates a random user, which will be added to the room
                     var user = Immutable.Map({
                         "id": id,
                         name: "Visitor-" + id
                     });
-                    self.onAddUser(activeRoom.get("id"), user);
+                    // Adds a random user to the currently active chat room!
+                    self.onAddUser(activeRoomId, user);
                     var randMsg = Math.floor(Math.random() * _randomChatMessages.length) + 1;
-                    ActionCreator.addUnconfirmedMessage(_randomChatMessages[randMsg-1], activeRoom.get("id"), user);
-
+                    // To simulate a normal chat session, each Bot which connects
+                    // to the chat room sends a random message to the room.
+                    ActionCreator.addUnconfirmedMessage(_randomChatMessages[randMsg - 1], activeRoomId, user);
                 } else {
-                    self.onRemoveUser(activeRoom.get("id"));
+                    logger.log("MembersStore:onOpenRoom:setInterval", "Remove random user from room");
+                    self.onRemoveUser(activeRoomId);
                 }
+                // We inform all subscribers of this store, about a data change
+                self.trigger(self.getAllMembers());
             }, 1000);
             _checkIntervals.push(intervalId);
         }
-        this.trigger(this.getAllMembers());
     },
     onAddUser(roomId, user) {
-        logger.log("MembersStore:onAddUser", "called...", roomId, user);
+        logger.log("MembersStore:onAddUser", "called... Add user to room: %o", roomId);
         //Adds a new user in room `roomId` with the following data `user`
         var members = _members.getIn([roomId, "members"]);
-        // Check if the room has a members map
-        if (members) {
-            // Set the new user infos for the passed in room!
-            members = members.set(user.get("id"), user)
-                // Set the new members map
-            //_members = _members.setIn([roomId, "members"], members);
-            var membersArr = _members.get(roomId).set("members", members)
-            _members = _members.set(roomId, membersArr);
-
-            //Inform all the views and other stores that the data changed!
-            this.trigger(this.getAllMembers());
+        // Check if the room has a members map defined
+        if (!members) {
+            // Because the members map is not defined yet, we will initialize it
+            // with an empty map!
+            _members = _members.setIn([roomId, "members"], Immutable.Map());
         }
+        // Let's set the new user to the correct room!
+        _members = _members.setIn([roomId, "members", user.get("id")], user);
+        // We inform all subscribers of this store, about a data change
+        this.trigger(this.getAllMembers());
     },
     onRemoveUser(roomId) {
         logger.log("MembersStore:onRemoveUser", "Remove a random user in room:", roomId);
+        var members = _members.getIn([roomId, "members"]);
+        if (!members) {
+            // Because the members map is not defined yet, we will create it!
+            _members = _members.setIn([roomId, "members"], Immutable.Map());
+        }
         var keys = Object.keys(_members.get(roomId).get("members").toObject());
         // Get a random key from the members map
         var randomKey = _.sample(keys);
@@ -130,7 +147,7 @@ let MembersStore = Reflux.createStore({
         var newMembers = _members.getIn([roomId, "members"]).delete(randomKey);
         // Set the new members map to the main data structure.
         _members = _members.setIn([roomId, "members"], newMembers);
-        //Inform all the views and other stores that the data changed!
+        // We inform all subscribers of this store, about a data change
         this.trigger(this.getAllMembers());
     }
 });

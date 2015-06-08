@@ -504,6 +504,10 @@ body {
   color: rgba(0, 0, 0, 0.3); }
 
 .room-list__item {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   background: rgba(128, 128, 128, 0.5);
   padding: 10px;
   border-radius: 3px;

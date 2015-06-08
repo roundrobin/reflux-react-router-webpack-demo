@@ -22,7 +22,6 @@ import Immutable from 'immutable';
 //==============================================================================
 // Internal dependencies
 //==============================================================================
-import MembersStore from '../stores/MembersStore';
 let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 //==============================================================================
 // Module definition
@@ -31,26 +30,19 @@ let MembersList = React.createClass({
   contextTypes: {
     router: React.PropTypes.func
   },
-  mixins: [Reflux.connectFilter(MembersStore, "members", function(state) {
-        let membersObj = state.get(this.props.roomId+"");
-        let returnObj = Immutable.Map();
-        if(membersObj && membersObj.get("members")){
-          returnObj = membersObj.get("members");
-        }
-
-        logger.log("MembersList:connectFilter", "props: %o members: %o ", this.props.roomId, returnObj.toJS());
-        return returnObj;
-    })],
   render() {
     let self = this;
-    logger.log("MembersList:render", "state",self.state);
+    logger.log("MembersList:render", "state",self.props);
 
     var members;
-    if(self.state.members){
+    if(self.props.members){
+      var memberKeys = Object.keys(self.props.members.toObject());
 
-      members = self.state.members.map(function(member, key){
+      logger.log("MembersList:render", "memberKeys", memberKeys);
+      members = memberKeys.map(function(memberId, key){
+        var member = self.props.members.get(memberId);
         return <div key={member.get("id")} className="members-area__item">{member.get("name")}-{member.get("id")}</div>;
-      })
+      });
 
     }
     return (<div className="members-list">

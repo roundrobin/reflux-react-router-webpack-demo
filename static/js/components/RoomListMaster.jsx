@@ -22,9 +22,19 @@ import Immutable from 'immutable';
 //==============================================================================
 // Internal dependencies
 //==============================================================================
-import RoomList from '../components/RoomList.jsx';
-import RoomsStore from '../stores/RoomsStore.js';
+//-------------------------------------
+// Actions
+//-------------------------------------
 import ActionCreators from '../actions/ActionCreator.js';
+//-------------------------------------
+// Stores
+//-------------------------------------
+import RoomsStore from '../stores/RoomsStore.js';
+//-------------------------------------
+// Views
+//-------------------------------------
+import RoomList from '../components/RoomList.jsx';
+
 //==============================================================================
 // Module definition
 //==============================================================================
@@ -43,14 +53,16 @@ let RoomListMaster = React.createClass({
         let id = Math.floor(Math.random() * 10000)+"";
         let newRoom = Immutable.Map({
             "title": "room-" + id,
-            "id": id+""
+            "id": id
         });
+        // Fires `addRoom` action!
         ActionCreators.addRoom(newRoom);
     },
     _onRoomOpen(room){
+        logger.log("RoomListMaster:_onRoomOpen", "called...");
+        // Fires `openRoom` action!
         ActionCreators.openRoom(room);
-        this.context.router.transitionTo('/room/' + room.get("id"));
-            
+        this.context.router.transitionTo('/room/' + room.get("id"));            
     },
     render() {
         let self = this;
