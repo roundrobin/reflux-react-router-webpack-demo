@@ -44015,11 +44015,8 @@
 	  },
 	  render: function render() {
 	    _bragiBrowser2['default'].log('RoomDetail:render', 'state. roomId:', this.state);
-	    var self = this;
-	    var view;
 	    var roomId = this.state.room.get('id');
-	    _bragiBrowser2['default'].log('RoomDetail:render', 'Found a room');
-	    view = _reactAddons2['default'].createElement(
+	    var view = _reactAddons2['default'].createElement(
 	      'div',
 	      null,
 	      _reactAddons2['default'].createElement(_ChatWindowJsx2['default'], { roomId: roomId }),

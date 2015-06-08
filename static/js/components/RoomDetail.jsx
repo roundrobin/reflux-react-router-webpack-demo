@@ -87,11 +87,8 @@ let RoomDetail = React.createClass({
   },
   render() {
     logger.log("RoomDetail:render", "state. roomId:", this.state);
-    var self = this;
-    var view;    
     var roomId = this.state.room.get("id");
-    logger.log("RoomDetail:render", "Found a room");
-    view = <div>
+    var view = <div>
           <ChatWindow roomId={roomId}/>         
           <MembersList roomId={roomId} members={this.state.members}/>
     </div>;
