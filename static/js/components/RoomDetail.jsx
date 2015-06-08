@@ -1,3 +1,17 @@
+/*
+ *
+ * `RoomListDetail.jsx` 
+ *
+ * Is responsible for rendering the `ChatWindow` and  `MembersList` component.
+ * It derrives it's data from the `Rooms` store by filtering the by the url query
+ * param.
+ *
+ *
+ * Usage:
+ * ```
+ *    <RoomDetail roomId='123'/>
+ * ```
+ */
 //==============================================================================
 // External dependencies
 //==============================================================================

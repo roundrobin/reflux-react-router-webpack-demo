@@ -38520,6 +38520,19 @@
 /* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	 *
+	 * `RoomListMaster.jsx` 
+	 *
+	 * The view is responsible to setup the master/detail structure for rooms list
+	 * and the chat detail page.
+	 *
+	 *
+	 * Usage:
+	 * ```
+	 *    <RoomListMaster/>
+	 * ```
+	 */
 	//==============================================================================
 	// External dependencies
 	//==============================================================================
@@ -43552,6 +43565,19 @@
 /* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	 *
+	 * `RoomList.jsx` 
+	 *
+	 * Renders a list of chat rooms. It uses the `ReactCSSTransitionGroup` react
+	 * addon to animate newly added/removed rooms. It derrives it's data from the 
+	 * parent component.
+	 *
+	 * Usage:
+	 * ```
+	 *    <RoomList rooms={objectWithRoomKeys} onRoomOpen={this.someCallback}/>
+	 * ```
+	 */
 	//==============================================================================
 	// External dependencies
 	//==============================================================================
@@ -43580,10 +43606,6 @@
 	var _immutable2 = _interopRequireDefault(_immutable);
 
 	//==============================================================================
-	// Internal dependencies
-	//==============================================================================
-
-	//==============================================================================
 	// Configs
 	//==============================================================================
 	var PureRenderMixin = _reactAddons2['default'].addons.PureRenderMixin;
@@ -43595,6 +43617,8 @@
 	    displayName: 'RoomList',
 
 	    shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	        // Shows an example on how to override `shouldComponentUpdate` to hook into
+	        // the app lifecycle.
 	        return !_immutable2['default'].is(nextProps.rooms, this.props.rooms);
 	    },
 	    render: function render() {
@@ -43843,6 +43867,20 @@
 /* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	 *
+	 * `RoomListDetail.jsx` 
+	 *
+	 * Is responsible for rendering the `ChatWindow` and  `MembersList` component.
+	 * It derrives it's data from the `Rooms` store by filtering the by the url query
+	 * param.
+	 *
+	 *
+	 * Usage:
+	 * ```
+	 *    <RoomDetail roomId='123'/>
+	 * ```
+	 */
 	//==============================================================================
 	// External dependencies
 	//==============================================================================

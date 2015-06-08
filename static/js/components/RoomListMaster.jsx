@@ -1,3 +1,16 @@
+/*
+ *
+ * `RoomListMaster.jsx` 
+ *
+ * The view is responsible to setup the master/detail structure for rooms list
+ * and the chat detail page.
+ *
+ *
+ * Usage:
+ * ```
+ *    <RoomListMaster/>
+ * ```
+ */
 //==============================================================================
 // External dependencies
 //==============================================================================

@@ -15,7 +15,6 @@
 import React from 'react/addons';
 import logger from 'bragi-browser';
 import { RouteHandler, Link, Navigation } from 'react-router';
-
 //==============================================================================
 // Module definition
 //==============================================================================

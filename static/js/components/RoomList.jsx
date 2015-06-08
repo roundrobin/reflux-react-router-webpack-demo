@@ -1,3 +1,16 @@
+/*
+ *
+ * `RoomList.jsx` 
+ *
+ * Renders a list of chat rooms. It uses the `ReactCSSTransitionGroup` react
+ * addon to animate newly added/removed rooms. It derrives it's data from the 
+ * parent component.
+ *
+ * Usage:
+ * ```
+ *    <RoomList rooms={objectWithRoomKeys} onRoomOpen={this.someCallback}/>
+ * ```
+ */
 //==============================================================================
 // External dependencies
 //==============================================================================
@@ -5,10 +18,6 @@ import React from 'react/addons';
 import logger from 'bragi-browser';
 import classNames from 'classnames';
 import Immutable from 'immutable';
-//==============================================================================
-// Internal dependencies
-//==============================================================================
-
 //==============================================================================
 // Configs
 //==============================================================================
@@ -19,6 +28,8 @@ let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 //==============================================================================
 let RoomList = React.createClass({
   shouldComponentUpdate(nextProps, nextState){
+    // Shows an example on how to override `shouldComponentUpdate` to hook into 
+    // the app lifecycle.
     return !Immutable.is(nextProps.rooms, this.props.rooms);
   }, 
   render() {
