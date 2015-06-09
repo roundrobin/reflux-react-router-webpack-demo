@@ -8,3 +8,4 @@ A set of questions which came up when I started using Reflux.
 * How should stores communicate between each other?
 * How to keep `render()` calls to an absolute minimum?
 * How to deal with UI states vs. data states? Should both live in a store?
+* What is waitFor really for?

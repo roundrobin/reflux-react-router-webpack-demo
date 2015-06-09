@@ -56659,7 +56659,7 @@
 	});
 
 	var _messages = _immutable2['default'].Map();
-
+	// Auto increment for message ids!
 	var _unconfirmedId = 0;
 	//==============================================================================
 	// Store definition

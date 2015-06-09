@@ -39,7 +39,7 @@ let exampleUser = Immutable.Map({
 });
 
 let _messages = Immutable.Map();
-
+// Auto increment for message ids!
 let _unconfirmedId = 0;
 //==============================================================================
 // Store definition
