@@ -1,10 +1,10 @@
-# Flux
+# Flux Insights
 
 This documents acts as a collections for Flux architecture insights.
 
 ## Findings: Where to put async operations?
 
-In [this article](http://www.code-experience.com/async-requests-with-react-js-and-flux-revisited/) I found a good explaination on why async operations should not leak into the store:
+[This article](http://www.code-experience.com/async-requests-with-react-js-and-flux-revisited/) gives an good explaination on why async operations should not leak into store:
 
 > Asynchronously executed callbacks should not leak into Stores. The consequences of it are just to hard to fully foresee. This leads to elusive bugs. Stores should only execute synchronous code. Otherwise they are too hard to understand.
 
@@ -15,7 +15,7 @@ Another good point I found [here](http://stackoverflow.com/questions/26632415/wh
 
 ## Findings: What is waitFor really for?
 
-[This Reflux article](http://spoike.ghost.io/deconstructing-reactjss-flux/) by the author explains how `waitFor` works in Reflux.
+[This Reflux article](http://spoike.ghost.io/deconstructing-reactjss-flux/) by it's author explains how `waitFor` works in Reflux.
 
 > The other thing that was puzzling me with the code of the TodoList example was that they included a waitFor functionality that is also admittedly broken. The situation is that a data store needs to wait for other datastores to complete their data handling after a particular action has been executed. This seems to go away from the single direction data-flow principle.
 
