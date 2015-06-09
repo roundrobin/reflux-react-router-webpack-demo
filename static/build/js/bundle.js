@@ -43998,7 +43998,6 @@
 	    if (membersOfRoom && membersOfRoom.get('members')) {
 	      return membersOfRoom.get('members');
 	    }
-
 	    //If no record was found, we return an empty map.
 	    return _immutable2['default'].Map();
 	  })],

@@ -69,7 +69,6 @@ let RoomDetail = React.createClass({
         if(membersOfRoom && membersOfRoom.get("members")){
           return membersOfRoom.get("members");  
         }
-
         //If no record was found, we return an empty map.
         return Immutable.Map();
     })    
@@ -88,10 +87,10 @@ let RoomDetail = React.createClass({
   render() {
     logger.log("RoomDetail:render", "state. roomId:", this.state);
     var roomId = this.state.room.get("id");
-    var view = <div>
+    var view = (<div>
           <ChatWindow roomId={roomId}/>         
           <MembersList roomId={roomId} members={this.state.members}/>
-    </div>;
+    </div>);
      
     return (
         <div className="active-rooms">      

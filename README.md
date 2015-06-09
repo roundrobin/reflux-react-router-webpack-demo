@@ -49,10 +49,10 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 * Isomorphic setup (no server side rendering)
 
 ## Resources
-
 * [Reflux Documentation](https://github.com/spoike/refluxjs)
 * [Article: Reflux](http://henleyedition.com/building-an-app-using-react-and-refluxjs/)
 * [Article: Introdction to contexts](https://www.tildedave.com/2014/11/15/introduction-to-contexts-in-react-js.html)
+* [Async request with Flux](http://www.code-experience.com/async-requests-with-react-js-and-flux-revisited/)
 
 ## Feedback
 
