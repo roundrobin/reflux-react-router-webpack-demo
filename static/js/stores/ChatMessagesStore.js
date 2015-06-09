@@ -1,3 +1,10 @@
+/*
+ *
+ * `ChatMessagesStore.js` 
+ *
+ * The `ChatMessagesStore` stores all chat messages per room.
+ * 
+ */
 //==============================================================================
 // External dependencies
 //==============================================================================

@@ -43735,6 +43735,13 @@
 /* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	 *
+	 * `RoomsStore.js` 
+	 *
+	 * The `RoomsStore` stores all rooms received from the backend.
+	 * 
+	 */
 	//==============================================================================
 	// External dependencies
 	//==============================================================================
@@ -56397,6 +56404,13 @@
 /* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	 *
+	 * `MembersStore.js` 
+	 *
+	 * The `MembersStore` stores members per room.
+	 * 
+	 */
 	//==============================================================================
 	// External dependencies
 	//==============================================================================
@@ -56578,6 +56592,13 @@
 /* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*
+	 *
+	 * `ChatMessagesStore.js` 
+	 *
+	 * The `ChatMessagesStore` stores all chat messages per room.
+	 * 
+	 */
 	//==============================================================================
 	// External dependencies
 	//==============================================================================
