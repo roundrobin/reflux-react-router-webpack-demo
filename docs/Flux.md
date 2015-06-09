@@ -22,6 +22,14 @@ Another good point I found [here](http://stackoverflow.com/questions/26632415/wh
 > Wouldn't it be easier if the Data Stores were listenable as well? Well, the way they're implemented in Reflux, you can aggregate the DataStores by listening to another data store's change event.
 
 
+## Findings: Where to put UI state in Flux
+
+
+This article covers a lot of good points regarding where to put UI state in Flux.
+
+http://www.thomasboyt.com/2014/09/15/no-fit-state.html
+
+
 
 ## Conclusions
 

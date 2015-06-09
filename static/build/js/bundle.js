@@ -44097,7 +44097,6 @@
 	//==============================================================================
 	var MembersList = _reactAddons2['default'].createClass({
 	  displayName: 'MembersList',
-
 	  contextTypes: {
 	    router: _reactAddons2['default'].PropTypes.func
 	  },

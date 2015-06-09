@@ -27,6 +27,7 @@ let ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 // Module definition
 //==============================================================================
 let MembersList = React.createClass({
+  displayName: 'MembersList',
   contextTypes: {
     router: React.PropTypes.func
   },

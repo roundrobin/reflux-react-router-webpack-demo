@@ -41,9 +41,10 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 
 ## Advantages Reflux
 * Small code base (~13kb)
-* For devs with Backbone.js background easy to pick up
-* Has hooks into the event lifecyle (preEmit, shouldEmit)
-	
+* For devs coming from Backbone.js it's easy to pick up
+* Has hooks into the event lifecyle (`preEmit`, `shouldEmit`)
+* Stores can listens to stores (not sure yet if an advantage)
+
 
 ## Not included
 * Isomorphic setup (no server side rendering)
@@ -53,6 +54,7 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 * [Article: Reflux](http://henleyedition.com/building-an-app-using-react-and-refluxjs/)
 * [Article: Introdction to contexts](https://www.tildedave.com/2014/11/15/introduction-to-contexts-in-react-js.html)
 * [Async request with Flux](http://www.code-experience.com/async-requests-with-react-js-and-flux-revisited/)
+* [An example on how to model stores](https://discuss.reactjs.org/t/computed-properties-in-flux/443/2)
 
 ## Feedback
 

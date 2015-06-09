@@ -5,7 +5,7 @@
   "scripts": {
     "local": "webpack --color --progress --watch",
     "dev": "webpack-dev-server --port 8124 --colors",
-    "test": "jest"
+    "test": "make test"
   },
   "repository": {
     "type": "git",
@@ -44,12 +44,7 @@
     "webpack": "1.9.10"
   },
   "devDependencies": {
-    "jest-cli": "^0.4.8"
-  },
-  "jest": {
-    "scriptPreprocessor": "<rootDir>/preprocessor.js",
-    "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react"
-    ]
+    "jest-cli": "^0.4.8",
+    "mocha": "^2.2.5"
   }
 }
