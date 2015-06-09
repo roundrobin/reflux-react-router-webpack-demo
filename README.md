@@ -20,6 +20,8 @@ run:
 $ npm run dev
 ```
 
+**Side note: The demo was tested with Node.js 0.12 Mac OSX / React 0.13.3**
+
 Then go to `http://localhost:8124` in your browser
 
 ## Demo: Single page application (SPA)
