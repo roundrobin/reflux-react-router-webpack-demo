@@ -36,7 +36,7 @@ const rootEl = document.getElementById('main');
 //------------------------------------------------------------------------------
 // Module definition
 //------------------------------------------------------------------------------
-logger.log("main", "start rendering the app...", );
+logger.log("main", "start rendering the app..." );
 
 // To show how ajax calls can be integrated within a flux app, we load rooms 
 // on page load!
