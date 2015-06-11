@@ -2,7 +2,7 @@
 
 This demo app uses `Reflux` as a Flux implementation and `React` in conjunction with the `react-router` component. It's goal is to show how to use Flux in modern web apps.
 
-![Demo of the app](https://raw.githubusercontent.com/roundrobin/reflux-react-router-webpack-demo/master/docs/DemoApp.gif)
+![Demo of the app](/docs/DemoApp.gif?raw=true)
 
 
 ## Install dependencies
@@ -52,7 +52,7 @@ You can run the tests like this: `$ npm test`.
 
 That should print out something like this:
 
-![Testing output](https://raw.githubusercontent.com/roundrobin/reflux-react-router-webpack-demo/master/docs/Testing.png)
+![Testing output](/docs/Testing.png?raw=true)
 
 **Note:** *Tests run only with Io.js, which should be soon obsolete, after Node.js and Io.js merge.*
 
