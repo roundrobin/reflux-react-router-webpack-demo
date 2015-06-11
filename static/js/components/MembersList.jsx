@@ -7,7 +7,8 @@
  *
  * Usage:
  * ```
- *    <MembersList roomId='123'/>
+      var members = Immutable.Map({1: {id: 1, name: "Hamburg"}});
+ *    <MembersList roomId='123' members={members}/>
  * ```
  */
 //==============================================================================
@@ -31,27 +32,32 @@ let MembersList = React.createClass({
   contextTypes: {
     router: React.PropTypes.func
   },
+  // Here we define which properties are required on component creat
+  propTypes: {
+    roomId: React.PropTypes.string.isRequired,
+    members: React.PropTypes.instanceOf(Immutable.Map).isRequired 
+  },
   render() {
     let self = this;
     logger.log("MembersList:render", "state",self.props);
 
-    var members;
-    if(self.props.members){
       var memberKeys = Object.keys(self.props.members.toObject());
 
       logger.log("MembersList:render", "memberKeys", memberKeys);
-      members = memberKeys.map(function(memberId, key){
+      var members = memberKeys.map(function(memberId, key){
         var member = self.props.members.get(memberId);
         return <div key={member.get("id")} className="members-area__item">{member.get("name")}-{member.get("id")}</div>;
       });
 
-    }
-    return (<div className="members-list">
-          <h2>Members of room: {this.props.roomId}</h2>
+    
+
+    return (
+      <div className="members-list">
           <div className="members-area">
               {members}              
           </div>
-      </div>);
+      </div>
+      );
     }
 });
 
