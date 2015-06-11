@@ -50,13 +50,13 @@ all active rooms. Based on that data we implement a couple of views visualizing 
 ## Tests
 
 The demo app contains a little test suite written with Facebook's test library [`Jest`](https://facebook.github.io/jest/).
-You can run the test like this: `$ npm test`.
+You can run the tests like this: `$ npm test`.
 
 That should print out something like this:
 
 ![Testing output](https://raw.githubusercontent.com/roundrobin/reflux-react-router-webpack-demo/master/docs/Testing.png)
 
-**Note:** *Tests run only with Io.js, which should be soon obsolete, after they merge.*
+**Note:** *Tests run only with Io.js, which should be soon obsolete, after Node.js and Io.js merge.*
 
 Unfortunately `Jest` has one dependency (`JSDOM`) which doesn't work on Node.js 0.12.
 If you running this `Node.js` version you have to install [`Io.js`](https://iojs.org/en/index.html), which is super quickly done.
