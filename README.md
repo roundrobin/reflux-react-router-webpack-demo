@@ -54,7 +54,7 @@ You can run the test like this: `$ npm test`
 
 That should print out something like this:
 
-![Testing output](https://raw.githubusercontent.com/roundrobin/reflux-react-router-webpack-demo/master/docs/DemoApp.gif)
+![Testing output](https://raw.githubusercontent.com/roundrobin/reflux-react-router-webpack-demo/master/docs/Testing.png)
 
 *Note:* **Tests run only with Io.js**, which should be soon obsolete, after they merge.
 Unfortunately `Jest` has one dependency (`JSDOM`) which doesn't work on Node.js 0.12.
