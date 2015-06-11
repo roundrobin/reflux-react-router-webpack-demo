@@ -7,6 +7,10 @@
     "dev": "webpack-dev-server --port 8124 --colors",
     "test": "node --harmony ./node_modules/jest-cli/bin/jest"
   },
+  "bin": {
+    "webpack": "./bin/webpack",
+    "webpack-dev-server": "./bin/webpack"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/roundrobin/reflux-react-router-webpack-demo.git"
@@ -42,7 +46,8 @@
     "sass": "0.5.0",
     "sass-loader": "1.0.2",
     "style-loader": "0.12.3",
-    "webpack": "1.9.10"
+    "webpack": "^1.9.10",
+    "webpack-dev-server": "^1.9.0"
   },
   "devDependencies": {
     "babel-jest": "^5.2.0",
@@ -50,8 +55,16 @@
   },
   "jest": {
     "testDirectoryName": "__tests__",
-    "moduleFileExtensions": ["js", "json", "jsx"],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "jsx"
+    ],
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
-    "unmockedModulePathPatterns": [ "../node_modules/react", "../node_modules/react/addons", "../node_modules/immutable"]
+    "unmockedModulePathPatterns": [
+      "../node_modules/react",
+      "../node_modules/react/addons",
+      "../node_modules/immutable"
+    ]
   }
 }

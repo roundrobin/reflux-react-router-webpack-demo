@@ -7,6 +7,7 @@
 jest.dontMock('../MembersList.jsx');
 
 describe('Tests MembersList Component Setup', function() {
+  // Is a simple test to see if a standard jest tset without React works!
   it('Tests if the setup works', function() {
 		expect(1).toBe(1);
   });
