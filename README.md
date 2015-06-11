@@ -1,6 +1,6 @@
 # Reflux demo app
 
-This demo app uses `Reflux` as a Flux implementation and `React` in conjunction with the `react-router` component. It's goal is to show how to use Flux in modern web apps.
+This demo app uses [`Reflux`](https://github.com/spoike/refluxjs) as a Flux implementation and `React` in conjunction with the `react-router` component. It's goal is to show how to use Flux in modern web apps.
 
 ![Demo of the app](/docs/DemoApp.gif?raw=true)
 
