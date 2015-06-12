@@ -6,12 +6,22 @@
  * support routing in our single page application.
  *
  */
-import routes from './routes.jsx';
+
+ //==============================================================================
+// External dependencies
+//==============================================================================
+
 import {
   create as createRouter,
   HistoryLocation,
   HashLocation
 } from 'react-router';
 
-
+//==============================================================================
+// Internal dependencies
+//==============================================================================
+import routes from './routes.jsx';
+//==============================================================================
+// Module definition
+//==============================================================================
 export default createRouter({ routes, HistoryLocation });
