@@ -66,7 +66,7 @@ Another good way doing it is using [NVM](https://github.com/creationix/nvm), whi
 
 ## Resources
 * [Reflux Documentation](https://github.com/spoike/refluxjs)
-* [Article: Reflux](http://henleyedition.com/building-an-app-using-react-and-refluxjs/)
+* [Article: Building an app using React and](http://henleyedition.com/building-an-app-using-react-and-refluxjs/)
 * [Article: Introdction to contexts](https://www.tildedave.com/2014/11/15/introduction-to-contexts-in-react-js.html)
 * [Async request with Flux](http://www.code-experience.com/async-requests-with-react-js-and-flux-revisited/)
 * [An example on how to model stores](https://discuss.reactjs.org/t/computed-properties-in-flux/443/2)
