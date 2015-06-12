@@ -1,9 +1,6 @@
 # Reflux demo app
 
-[![Build Status](https://travis-ci.org/roundrobin/reflux-react-router-webpack-demo.svg?branch=master)](https://travis-ci.org/roundrobin/reflux-react-router-webpack-demo)
-
-
-![Package status](https://david-dm.org/roundrobin/reflux-react-router-webpack-demo.svg)
+[![Build Status](https://travis-ci.org/roundrobin/reflux-react-router-webpack-demo.svg?branch=master)](https://travis-ci.org/roundrobin/reflux-react-router-webpack-demo) ![Package status](https://david-dm.org/roundrobin/reflux-react-router-webpack-demo.svg)
 
 
 This demo app uses [`Reflux`](https://github.com/spoike/refluxjs) as a Flux implementation and `React` in conjunction with the `react-router` component. It's goal is to show how to use Flux in modern web apps.
