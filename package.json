@@ -5,7 +5,7 @@
   "scripts": {
     "local": "webpack --color --progress --watch",
     "dev": "webpack-dev-server --port 8124 --colors",
-    "test": "node --harmony ./node_modules/jest-cli/bin/jest"
+    "test": "node --harmony ./node_modules/jest-cli/bin/jest --coverage"
   },
   "bin": {
     "webpack": "./bin/webpack",
@@ -65,6 +65,10 @@
       "../node_modules/react",
       "../node_modules/react/addons",
       "../node_modules/immutable"
-    ]
+    ],
+    "collectCoverage": true,
+    "collectCoverageOnlyFrom" : {
+      "./static/js/components/MembersList.jsx" : true
+    }
   }
 }
