@@ -25,3 +25,11 @@ import routes from './routes.jsx';
 // Module definition
 //==============================================================================
 export default createRouter({ routes, HistoryLocation });
+
+
+//// NOTE: To create the router without hashes in the URL, use:
+//export default createRouter({
+    //routes: routes, 
+    //location: HistoryLocation
+//});
+//// NOTE: If NOT using hashes, server must support the route
